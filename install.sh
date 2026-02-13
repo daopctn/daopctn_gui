@@ -217,43 +217,26 @@ echo ""
 if [ "$INTERACTIVE" = true ]; then
     echo -e "${PURPLE}═══ Select Components to Install ═══${NC}"
     echo ""
-    echo "Pick what you want to install (space-separated numbers, or 'a' for all):"
-    echo ""
-    echo -e "  ${CYAN}1)${NC} nvim       - Neovim editor config (Dracula + Lazy plugins)"
-    echo -e "  ${CYAN}2)${NC} ghostty    - Ghostty terminal config (Dracula theme + shader)"
-    echo -e "  ${CYAN}3)${NC} btop       - btop system monitor config"
-    echo -e "  ${CYAN}4)${NC} cava       - cava audio visualizer config"
-    echo -e "  ${CYAN}5)${NC} neofetch   - neofetch system info config"
-    echo -e "  ${CYAN}6)${NC} starship   - Starship prompt config"
-    echo -e "  ${CYAN}7)${NC} fonts      - Install CaskaydiaCove Nerd Font"
-    echo ""
-    echo -e "  ${CYAN}a)${NC} All of the above"
-    echo ""
-    read -p "Your choices (e.g. 1 3 6 or a): " -r CHOICES
+    echo "For each component, press y to install or n to skip:"
     echo ""
 
-    if [[ "$CHOICES" == *"a"* ]] || [[ "$CHOICES" == *"A"* ]]; then
-        INSTALL_NVIM=true
-        INSTALL_GHOSTTY=true
-        INSTALL_BTOP=true
-        INSTALL_CAVA=true
-        INSTALL_NEOFETCH=true
-        INSTALL_STARSHIP=true
-        INSTALL_FONTS=true
-    else
-        for choice in $CHOICES; do
-            case "$choice" in
-                1) INSTALL_NVIM=true ;;
-                2) INSTALL_GHOSTTY=true ;;
-                3) INSTALL_BTOP=true ;;
-                4) INSTALL_CAVA=true ;;
-                5) INSTALL_NEOFETCH=true ;;
-                6) INSTALL_STARSHIP=true ;;
-                7) INSTALL_FONTS=true ;;
-                *) print_warning "Unknown choice: $choice (skipping)" ;;
-            esac
-        done
-    fi
+    ask_install() {
+        local name="$1"
+        local desc="$2"
+        read -p "  Install ${name} (${desc})? (y/n): " -n 1 -r
+        echo ""
+        [[ $REPLY =~ ^[Yy]$ ]]
+    }
+
+    ask_install "nvim"     "Neovim editor config"                   && INSTALL_NVIM=true
+    ask_install "ghostty"  "Ghostty terminal config"                && INSTALL_GHOSTTY=true
+    ask_install "btop"     "btop system monitor config"             && INSTALL_BTOP=true
+    ask_install "cava"     "cava audio visualizer config"           && INSTALL_CAVA=true
+    ask_install "neofetch" "neofetch system info config"            && INSTALL_NEOFETCH=true
+    ask_install "starship" "Starship prompt config"                 && INSTALL_STARSHIP=true
+    ask_install "fonts"    "CaskaydiaCove Nerd Font"                && INSTALL_FONTS=true
+
+    echo ""
 
     # Check if anything was selected
     if [ "$INSTALL_NVIM" = false ] && [ "$INSTALL_GHOSTTY" = false ] && \
