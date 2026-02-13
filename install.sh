@@ -2,6 +2,7 @@
 
 # daopctn_gui Installation Script
 # Automated setup for Dracula-themed terminal environment
+# Designed for Ubuntu and similar Debian-based Linux distributions
 
 set -e  # Exit on error
 
@@ -347,95 +348,40 @@ if [ ${#MISSING_DEPS[@]} -gt 0 ]; then
     echo ""
 
     if [[ $REPLY =~ ^[Yy]$ ]]; then
-        # Detect package manager
+        # Detect package manager (designed for Ubuntu/Debian-based distros)
         if command_exists apt; then
             PKG_MANAGER="apt"
             INSTALL_CMD="sudo apt update && sudo apt install -y"
         elif command_exists dnf; then
             PKG_MANAGER="dnf"
             INSTALL_CMD="sudo dnf install -y"
-        elif command_exists yum; then
-            PKG_MANAGER="yum"
-            INSTALL_CMD="sudo yum install -y"
         elif command_exists pacman; then
             PKG_MANAGER="pacman"
             INSTALL_CMD="sudo pacman -S --noconfirm"
-        elif command_exists zypper; then
-            PKG_MANAGER="zypper"
-            INSTALL_CMD="sudo zypper install -y"
-        elif command_exists apk; then
-            PKG_MANAGER="apk"
-            INSTALL_CMD="sudo apk add"
-        elif command_exists xbps-install; then
-            PKG_MANAGER="xbps"
-            INSTALL_CMD="sudo xbps-install -y"
-        elif command_exists emerge; then
-            PKG_MANAGER="emerge"
-            INSTALL_CMD="sudo emerge --ask=n"
-        elif command_exists nix-env; then
-            PKG_MANAGER="nix"
-            INSTALL_CMD="nix-env -iA nixpkgs."
         else
-            print_error "Could not detect package manager. Please install dependencies manually."
+            print_error "Could not detect a supported package manager (apt, dnf, pacman)."
+            print_info "This script is designed for Ubuntu and similar Debian-based distros."
+            print_info "Please install the missing dependencies manually and re-run the script."
             exit 1
         fi
 
         print_info "Using package manager: $PKG_MANAGER"
 
-        # Map generic package names to distro-specific names
-        get_pkg_name() {
-            local dep="$1"
-            case "$dep" in
-                nvim)
-                    case "$PKG_MANAGER" in
-                        emerge) echo "app-editors/neovim" ;;
-                        nix)    echo "neovim" ;;
-                        apk)    echo "neovim" ;;
-                        *)      echo "neovim" ;;
-                    esac
-                    ;;
-                btop)
-                    case "$PKG_MANAGER" in
-                        emerge) echo "sys-process/btop" ;;
-                        *)      echo "btop" ;;
-                    esac
-                    ;;
-                cava)
-                    case "$PKG_MANAGER" in
-                        emerge) echo "media-sound/cava" ;;
-                        *)      echo "cava" ;;
-                    esac
-                    ;;
-                neofetch)
-                    case "$PKG_MANAGER" in
-                        emerge) echo "app-misc/neofetch" ;;
-                        *)      echo "neofetch" ;;
-                    esac
-                    ;;
-                *)
-                    echo "$dep"
-                    ;;
-            esac
-        }
-
         # Install packages (except starship which needs special handling)
         INSTALL_PKGS=()
         for dep in "${MISSING_DEPS[@]}"; do
             if [ "$dep" != "starship" ]; then
-                INSTALL_PKGS+=("$(get_pkg_name "$dep")")
+                if [ "$dep" = "nvim" ]; then
+                    INSTALL_PKGS+=("neovim")
+                else
+                    INSTALL_PKGS+=("$dep")
+                fi
             fi
         done
 
         if [ ${#INSTALL_PKGS[@]} -gt 0 ]; then
             print_info "Installing: ${INSTALL_PKGS[*]}"
-            if [ "$PKG_MANAGER" = "nix" ]; then
-                # Nix installs packages one at a time with attribute paths
-                for pkg in "${INSTALL_PKGS[@]}"; do
-                    nix-env -iA "nixpkgs.$pkg"
-                done
-            else
-                eval "$INSTALL_CMD ${INSTALL_PKGS[*]}"
-            fi
+            eval "$INSTALL_CMD ${INSTALL_PKGS[*]}"
             print_success "Packages installed successfully"
         fi
 
