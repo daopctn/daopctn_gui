@@ -2,6 +2,7 @@
 
 # daopctn_gui Installation Script
 # Automated setup for Dracula-themed terminal environment
+# Designed for Ubuntu and similar Debian-based Linux distributions
 
 set -e  # Exit on error
 
@@ -347,7 +348,7 @@ if [ ${#MISSING_DEPS[@]} -gt 0 ]; then
     echo ""
 
     if [[ $REPLY =~ ^[Yy]$ ]]; then
-        # Detect package manager
+        # Detect package manager (designed for Ubuntu/Debian-based distros)
         if command_exists apt; then
             PKG_MANAGER="apt"
             INSTALL_CMD="sudo apt update && sudo apt install -y"
@@ -358,7 +359,9 @@ if [ ${#MISSING_DEPS[@]} -gt 0 ]; then
             PKG_MANAGER="pacman"
             INSTALL_CMD="sudo pacman -S --noconfirm"
         else
-            print_error "Could not detect package manager. Please install dependencies manually."
+            print_error "Could not detect a supported package manager (apt, dnf, pacman)."
+            print_info "This script is designed for Ubuntu and similar Debian-based distros."
+            print_info "Please install the missing dependencies manually and re-run the script."
             exit 1
         fi
 

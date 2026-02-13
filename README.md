@@ -1,6 +1,6 @@
-# daopctn_gui - Personal Configuration Collection
+# daopctn_gui - Dracula Terminal Setup for Ubuntu/Debian
 
-A unified collection of personal GUI and terminal configurations with a consistent **Dracula theme** aesthetic. This setup provides a beautiful, cohesive development environment focused on terminal-based workflows.
+A unified collection of personal GUI and terminal configurations with a consistent **Dracula theme** aesthetic. Designed for **Ubuntu and similar Debian-based Linux distributions**. This setup provides a beautiful, cohesive development environment focused on terminal-based workflows.
 
 ## 🚀 Quick Start (TL;DR)
 
