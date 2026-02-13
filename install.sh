@@ -354,9 +354,27 @@ if [ ${#MISSING_DEPS[@]} -gt 0 ]; then
         elif command_exists dnf; then
             PKG_MANAGER="dnf"
             INSTALL_CMD="sudo dnf install -y"
+        elif command_exists yum; then
+            PKG_MANAGER="yum"
+            INSTALL_CMD="sudo yum install -y"
         elif command_exists pacman; then
             PKG_MANAGER="pacman"
             INSTALL_CMD="sudo pacman -S --noconfirm"
+        elif command_exists zypper; then
+            PKG_MANAGER="zypper"
+            INSTALL_CMD="sudo zypper install -y"
+        elif command_exists apk; then
+            PKG_MANAGER="apk"
+            INSTALL_CMD="sudo apk add"
+        elif command_exists xbps-install; then
+            PKG_MANAGER="xbps"
+            INSTALL_CMD="sudo xbps-install -y"
+        elif command_exists emerge; then
+            PKG_MANAGER="emerge"
+            INSTALL_CMD="sudo emerge --ask=n"
+        elif command_exists nix-env; then
+            PKG_MANAGER="nix"
+            INSTALL_CMD="nix-env -iA nixpkgs."
         else
             print_error "Could not detect package manager. Please install dependencies manually."
             exit 1
@@ -364,21 +382,60 @@ if [ ${#MISSING_DEPS[@]} -gt 0 ]; then
 
         print_info "Using package manager: $PKG_MANAGER"
 
+        # Map generic package names to distro-specific names
+        get_pkg_name() {
+            local dep="$1"
+            case "$dep" in
+                nvim)
+                    case "$PKG_MANAGER" in
+                        emerge) echo "app-editors/neovim" ;;
+                        nix)    echo "neovim" ;;
+                        apk)    echo "neovim" ;;
+                        *)      echo "neovim" ;;
+                    esac
+                    ;;
+                btop)
+                    case "$PKG_MANAGER" in
+                        emerge) echo "sys-process/btop" ;;
+                        *)      echo "btop" ;;
+                    esac
+                    ;;
+                cava)
+                    case "$PKG_MANAGER" in
+                        emerge) echo "media-sound/cava" ;;
+                        *)      echo "cava" ;;
+                    esac
+                    ;;
+                neofetch)
+                    case "$PKG_MANAGER" in
+                        emerge) echo "app-misc/neofetch" ;;
+                        *)      echo "neofetch" ;;
+                    esac
+                    ;;
+                *)
+                    echo "$dep"
+                    ;;
+            esac
+        }
+
         # Install packages (except starship which needs special handling)
         INSTALL_PKGS=()
         for dep in "${MISSING_DEPS[@]}"; do
             if [ "$dep" != "starship" ]; then
-                if [ "$dep" = "nvim" ]; then
-                    INSTALL_PKGS+=("neovim")
-                else
-                    INSTALL_PKGS+=("$dep")
-                fi
+                INSTALL_PKGS+=("$(get_pkg_name "$dep")")
             fi
         done
 
         if [ ${#INSTALL_PKGS[@]} -gt 0 ]; then
             print_info "Installing: ${INSTALL_PKGS[*]}"
-            eval "$INSTALL_CMD ${INSTALL_PKGS[*]}"
+            if [ "$PKG_MANAGER" = "nix" ]; then
+                # Nix installs packages one at a time with attribute paths
+                for pkg in "${INSTALL_PKGS[@]}"; do
+                    nix-env -iA "nixpkgs.$pkg"
+                done
+            else
+                eval "$INSTALL_CMD ${INSTALL_PKGS[*]}"
+            fi
             print_success "Packages installed successfully"
         fi
 
