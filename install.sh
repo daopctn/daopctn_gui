@@ -190,6 +190,35 @@ install_config() {
 }
 
 # ============================================
+# Neovim: install v0.11.6 from GitHub releases
+# https://github.com/neovim/neovim/releases/tag/v0.11.6
+# Installs to ~/.local/bin/nvim (no sudo needed)
+# ============================================
+install_nvim_from_release() {
+    local version="0.11.6"
+    local arch
+    arch=$(uname -m)
+    local url="https://github.com/neovim/neovim/releases/download/v${version}/nvim-linux-${arch}.tar.gz"
+
+    print_info "Installing Neovim v${version} from GitHub releases..."
+    curl -fLo /tmp/nvim.tar.gz "$url"
+    mkdir -p "$HOME/.local"
+    tar -xf /tmp/nvim.tar.gz -C "$HOME/.local" --strip-components=1
+    rm -f /tmp/nvim.tar.gz
+
+    if [ -f "$HOME/.local/bin/nvim" ]; then
+        print_success "Neovim v${version} installed to ~/.local/bin/nvim"
+    else
+        print_error "Neovim installation may have failed. Check output above."
+    fi
+
+    if [[ ":$PATH:" != *":$HOME/.local/bin:"* ]]; then
+        print_warning "~/.local/bin is not in your PATH."
+        print_info "Add this to your shell config: export PATH=\"\$HOME/.local/bin:\$PATH\""
+    fi
+}
+
+# ============================================
 # Check if running on Linux
 # ============================================
 if [[ "$OSTYPE" != "linux-gnu"* ]]; then
@@ -281,8 +310,11 @@ done
 
 # Only check deps for selected components
 if [ "$INSTALL_NVIM" = true ]; then
-    if command_exists "nvim"; then
-        print_success "nvim is installed"
+    if command_exists "nvim" && nvim --version 2>/dev/null | grep -q "v0\.11\.6"; then
+        print_success "nvim v0.11.6 is installed"
+    elif command_exists "nvim"; then
+        print_warning "nvim is installed but not v0.11.6 — will upgrade"
+        MISSING_DEPS+=("nvim")
     else
         print_warning "nvim is NOT installed"
         MISSING_DEPS+=("nvim")
@@ -329,7 +361,8 @@ if [ "$INSTALL_GHOSTTY" = true ]; then
     if command_exists "ghostty"; then
         print_success "ghostty is installed"
     else
-        print_warning "ghostty is NOT installed (optional)"
+        print_warning "ghostty is NOT installed — skipping Ghostty config"
+        INSTALL_GHOSTTY=false
     fi
 fi
 
@@ -367,15 +400,11 @@ if [ ${#MISSING_DEPS[@]} -gt 0 ]; then
 
         print_info "Using package manager: $PKG_MANAGER"
 
-        # Install packages (except starship which needs special handling)
+        # Install packages (except starship and nvim which need special handling)
         INSTALL_PKGS=()
         for dep in "${MISSING_DEPS[@]}"; do
-            if [ "$dep" != "starship" ]; then
-                if [ "$dep" = "nvim" ]; then
-                    INSTALL_PKGS+=("neovim")
-                else
-                    INSTALL_PKGS+=("$dep")
-                fi
+            if [ "$dep" != "starship" ] && [ "$dep" != "nvim" ]; then
+                INSTALL_PKGS+=("$dep")
             fi
         done
 
@@ -390,6 +419,11 @@ if [ ${#MISSING_DEPS[@]} -gt 0 ]; then
             print_info "Installing starship..."
             curl -sS https://starship.rs/install.sh | sh -s -- -y
             print_success "Starship installed"
+        fi
+
+        # Install nvim from GitHub releases
+        if [[ " ${MISSING_DEPS[@]} " =~ " nvim " ]]; then
+            install_nvim_from_release
         fi
     else
         print_warning "Skipping dependency installation. Some features may not work."
@@ -450,6 +484,26 @@ echo ""
 [ "$INSTALL_STARSHIP" = true ] && install_config "starship.toml"
 
 echo ""
+
+# ============================================
+# Ghostty: set as default terminal
+# ============================================
+if [ "$INSTALL_GHOSTTY" = true ]; then
+    echo -e "${PURPLE}═══ Ghostty: Setting as Default Terminal ═══${NC}"
+    echo ""
+
+    if command_exists gsettings; then
+        gsettings set org.gnome.desktop.default-applications.terminal exec 'ghostty'
+        gsettings set org.gnome.desktop.default-applications.terminal exec-arg ''
+        print_success "Ghostty set as default terminal"
+    else
+        print_warning "gsettings not found — skipping default terminal setup"
+        print_info "To set manually, run:"
+        print_info "  gsettings set org.gnome.desktop.default-applications.terminal exec 'ghostty'"
+    fi
+
+    echo ""
+fi
 
 # ============================================
 # Step 6: Install Nerd Fonts (if selected)
