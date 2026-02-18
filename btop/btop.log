@@ -95,3 +95,9 @@
 2026/02/12 (21:42:49) | DEBUG: Using locale C.UTF-8
 2026/02/12 (21:42:49) | INFO: Running on /dev/pts/1
 2026/02/12 (21:42:50) | DEBUG: Loading theme file: /usr/share/btop/themes/dracula.theme
+
+2026/02/18 (22:50:21) | ===> btop++ v.1.2.3
+2026/02/18 (22:50:21) | INFO: Logger set to DEBUG
+2026/02/18 (22:50:21) | DEBUG: Using locale C.UTF-8
+2026/02/18 (22:50:21) | INFO: Running on /dev/pts/0
+2026/02/18 (22:50:21) | DEBUG: Loading theme file: /usr/share/btop/themes/dracula.theme
