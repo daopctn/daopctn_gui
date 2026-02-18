@@ -319,6 +319,15 @@ if [ "$INSTALL_NVIM" = true ]; then
         print_warning "nvim is NOT installed"
         MISSING_DEPS+=("nvim")
     fi
+
+    # npm is required by mason.nvim to install LSP servers
+    # (pyright, ts_ls, bashls, jsonls, yamlls all need npm)
+    if command_exists "npm"; then
+        print_success "npm is installed (required by mason.nvim for LSP servers)"
+    else
+        print_warning "npm is NOT installed (required by mason.nvim for LSP servers)"
+        MISSING_DEPS+=("npm")
+    fi
 fi
 
 if [ "$INSTALL_BTOP" = true ]; then
@@ -606,6 +615,14 @@ if [ "$INSTALL_NVIM" = true ]; then
     print_warning "  - Auto-completion (nvim-cmp)"
     print_warning "  - Git file view (fugitive, diffview, etc.)"
     echo ""
+
+    if ! command_exists "npm"; then
+        print_warning "npm is still not installed!"
+        print_warning "Mason.nvim needs npm to install LSP servers (pyright, ts_ls, bashls, jsonls, yamlls)."
+        print_info "Install npm with: sudo apt install npm"
+        print_info "Or use nvm: https://github.com/nvm-sh/nvm"
+        echo ""
+    fi
 
     read -p "Would you like to open Neovim now to install plugins? (y/n): " -n 1 -r
     echo ""
