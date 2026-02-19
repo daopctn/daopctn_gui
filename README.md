@@ -88,6 +88,7 @@ This configuration collection is designed for developers who prefer a **modern, 
   - Treesitter (treesitter.lua) - Better syntax highlighting
   - LSP Config (lsp-config.lua) - Language server support
   - None-ls (none-ls.lua) - Formatting and linting
+  - Completions (completions.lua) - Auto-complete with nvim-cmp, LuaSnip, and snippet support
   - Smear Cursor (smear_cursor.lua) - Smooth cursor animation
 - **Settings**:
   - 2-space indentation
@@ -96,7 +97,6 @@ This configuration collection is designed for developers who prefer a **modern, 
   - Auto-read file changes
 
 **⚠️ Important Notes**:
-- **NO auto-complete included**: This config does NOT include completion engines like nvim-cmp. You'll need to add this separately if desired.
 - **NO git file view included**: No git diff viewer or git blame plugins. Basic git integration through lualine statusline only.
 - **Minimal setup**: Focused on essential editing features without overwhelming beginners.
 
@@ -289,9 +289,6 @@ background-image-opacity = 0.01  # Adjust opacity (0.0 - 1.0)
 ### Disable Neovim Plugins
 Edit `nvim/lua/plugins/<plugin-name>.lua` and set `enabled = false`
 
-### Add Auto-Complete to Neovim
-Create `nvim/lua/plugins/nvim-cmp.lua` and add nvim-cmp configuration
-
 ### Add Git Diff View to Neovim
 Install plugins like `diffview.nvim` or `gitsigns.nvim`
 
@@ -304,7 +301,7 @@ daopctn_gui/
 ├── nvim/                  # Neovim configuration
 │   ├── init.lua          # Main config
 │   ├── lazy-lock.json    # Plugin versions lock
-│   └── lua/plugins/      # Individual plugin configs (11 files)
+│   └── lua/plugins/      # Individual plugin configs (12 files)
 ├── ghostty/              # Ghostty terminal
 │   ├── config            # Main config
 │   ├── shaders/          # GLSL shaders (cursor effects)
@@ -367,7 +364,6 @@ This happens automatically! The lock file ensures everyone gets the same plugin 
 ## 🚀 What's Missing (Intentionally)
 
 These are NOT included but can be added:
-- **Neovim Auto-complete**: nvim-cmp, coc.nvim, etc.
 - **Git Integration**: fugitive, gitsigns, diffview, lazygit
 - **Terminal Multiplexers**: tmux, screen configs (Ghostty has built-in splits)
 - **Shell Configs**: .bashrc, .zshrc (only starship prompt included)
