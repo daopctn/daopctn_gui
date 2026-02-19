@@ -36,7 +36,19 @@ return {
         },
       },
       sections = {
-        lualine_a = { "mode" },
+        lualine_a = {
+          "mode",
+          {
+            function()
+              local reg = vim.fn.reg_recording()
+              if reg ~= "" then
+                return "recording @" .. reg
+              end
+              return ""
+            end,
+            color = { fg = "#ff5555", gui = "bold" },
+          },
+        },
         lualine_b = { "branch", "diff", "diagnostics" },
         lualine_c = { "filename" },
         lualine_x = {
