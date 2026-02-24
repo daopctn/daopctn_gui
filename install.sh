@@ -20,6 +20,9 @@ NC='\033[0m' # No Color
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 CONFIG_DIR="$HOME/.config"
 BACKUP_DIR="$HOME/.config-backup-$(date +%Y%m%d-%H%M%S)"
+OFFLINE_DIR="$SCRIPT_DIR/offline"
+NVIM_DATA="$HOME/.local/share/nvim"
+HAS_INTERNET=""
 
 # ============================================
 # Component selection flags (default: off)
@@ -156,6 +159,24 @@ command_exists() {
     command -v "$1" >/dev/null 2>&1
 }
 
+check_internet() {
+    if [ -n "$HAS_INTERNET" ]; then
+        [ "$HAS_INTERNET" = "yes" ]
+        return
+    fi
+    if curl -s --connect-timeout 3 --max-time 5 https://github.com >/dev/null 2>&1; then
+        HAS_INTERNET="yes"
+        return 0
+    else
+        HAS_INTERNET="no"
+        return 1
+    fi
+}
+
+has_offline_file() {
+    [ -f "$OFFLINE_DIR/$1" ]
+}
+
 backup_config() {
     local config_name=$1
     local config_path="$CONFIG_DIR/$config_name"
@@ -198,13 +219,28 @@ install_nvim_from_release() {
     local version="0.11.6"
     local arch
     arch=$(uname -m)
-    local url="https://github.com/neovim/neovim/releases/download/v${version}/nvim-linux-${arch}.tar.gz"
+    local nvim_file="nvim-linux-${arch}.tar.gz"
+    local url="https://github.com/neovim/neovim/releases/download/v${version}/${nvim_file}"
+    local tarball=""
 
-    print_info "Installing Neovim v${version} from GitHub releases..."
-    curl -fLo /tmp/nvim.tar.gz "$url"
+    print_info "Installing Neovim v${version}..."
+
+    # Try internet first, fall back to offline bundle
+    if check_internet && curl -fLo /tmp/nvim.tar.gz "$url" 2>/dev/null; then
+        tarball="/tmp/nvim.tar.gz"
+        print_info "Downloaded from GitHub"
+    elif has_offline_file "$nvim_file"; then
+        tarball="$OFFLINE_DIR/$nvim_file"
+        print_info "Using offline bundle"
+    else
+        print_error "Cannot download Neovim and no offline bundle found."
+        print_error "Run bundle.sh first to create offline archives."
+        return 1
+    fi
+
     mkdir -p "$HOME/.local"
-    tar -xf /tmp/nvim.tar.gz -C "$HOME/.local" --strip-components=1
-    rm -f /tmp/nvim.tar.gz
+    tar -xf "$tarball" -C "$HOME/.local" --strip-components=1
+    [ "$tarball" = "/tmp/nvim.tar.gz" ] && rm -f /tmp/nvim.tar.gz
 
     if [ -f "$HOME/.local/bin/nvim" ]; then
         print_success "Neovim v${version} installed to ~/.local/bin/nvim"
@@ -239,6 +275,17 @@ echo "╚═══════════════════════�
 echo -e "${NC}"
 
 print_info "Installation directory: $SCRIPT_DIR"
+
+if check_internet; then
+    print_success "Internet connection detected"
+else
+    print_warning "No internet connection — will use offline bundle if available"
+    if [ -d "$OFFLINE_DIR" ]; then
+        print_info "Offline bundle found at: $OFFLINE_DIR"
+    else
+        print_warning "No offline bundle found. Run bundle.sh with internet first."
+    fi
+fi
 echo ""
 
 # ============================================
@@ -426,8 +473,18 @@ if [ ${#MISSING_DEPS[@]} -gt 0 ]; then
         # Install starship separately
         if [[ " ${MISSING_DEPS[@]} " =~ " starship " ]]; then
             print_info "Installing starship..."
-            curl -sS https://starship.rs/install.sh | sh -s -- -y
-            print_success "Starship installed"
+            if check_internet && curl -sS https://starship.rs/install.sh | sh -s -- -y; then
+                print_success "Starship installed"
+            elif has_offline_file "starship.tar.gz"; then
+                print_info "Using offline bundle for starship..."
+                tar -xzf "$OFFLINE_DIR/starship.tar.gz" -C /tmp/
+                mkdir -p "$HOME/.local/bin"
+                mv /tmp/starship "$HOME/.local/bin/starship"
+                chmod +x "$HOME/.local/bin/starship"
+                print_success "Starship installed from offline bundle to ~/.local/bin/starship"
+            else
+                print_error "Cannot download Starship and no offline bundle found."
+            fi
         fi
 
         # Install nvim from GitHub releases
@@ -495,6 +552,49 @@ echo ""
 echo ""
 
 # ============================================
+# Step 5.5: Restore Offline Nvim Data (if no internet)
+# ============================================
+if [ "$INSTALL_NVIM" = true ] && ! check_internet; then
+    echo -e "${PURPLE}═══ Offline: Restoring Neovim Data ═══${NC}"
+    echo ""
+
+    mkdir -p "$NVIM_DATA"
+
+    # Restore plugins
+    if has_offline_file "nvim-plugins.tar.gz"; then
+        print_info "Restoring nvim plugins from offline bundle..."
+        tar -xzf "$OFFLINE_DIR/nvim-plugins.tar.gz" -C "$NVIM_DATA"
+        print_success "Plugins restored to $NVIM_DATA/lazy/"
+    else
+        print_warning "No offline nvim-plugins.tar.gz found. Plugins won't be available until internet is restored."
+    fi
+
+    # Restore mason LSP servers
+    if has_offline_file "mason-packages.tar.gz"; then
+        print_info "Restoring mason LSP servers from offline bundle..."
+        tar -xzf "$OFFLINE_DIR/mason-packages.tar.gz" -C "$NVIM_DATA"
+        print_success "Mason packages restored to $NVIM_DATA/mason/"
+    else
+        print_warning "No offline mason-packages.tar.gz found. LSP servers won't be available until internet is restored."
+    fi
+
+    # Restore treesitter parsers
+    if has_offline_file "treesitter-parsers.tar.gz"; then
+        ts_parser_dir="$NVIM_DATA/lazy/nvim-treesitter/parser"
+        if [ -d "$NVIM_DATA/lazy/nvim-treesitter" ]; then
+            mkdir -p "$ts_parser_dir"
+            print_info "Restoring treesitter parsers from offline bundle..."
+            tar -xzf "$OFFLINE_DIR/treesitter-parsers.tar.gz" -C "$ts_parser_dir"
+            print_success "Treesitter parsers restored"
+        else
+            print_warning "nvim-treesitter plugin not found. Restore plugins first."
+        fi
+    fi
+
+    echo ""
+fi
+
+# ============================================
 # Ghostty: set as default terminal
 # ============================================
 if [ "$INSTALL_GHOSTTY" = true ]; then
@@ -529,17 +629,24 @@ if [ "$INSTALL_FONTS" = true ]; then
     cd /tmp
 
     FONT_URL="https://github.com/ryanoasis/nerd-fonts/releases/latest/download/CascadiaCode.zip"
-    print_info "Downloading from: $FONT_URL"
+    font_zip=""
 
-    if curl -fLo CascadiaCode.zip "$FONT_URL"; then
-        unzip -o CascadiaCode.zip -d "$FONT_DIR/CascadiaCode" >/dev/null 2>&1
-        rm CascadiaCode.zip
+    if check_internet && curl -fLo /tmp/CascadiaCode.zip "$FONT_URL" 2>/dev/null; then
+        font_zip="/tmp/CascadiaCode.zip"
+        print_info "Downloaded from GitHub"
+    elif has_offline_file "CascadiaCode.zip"; then
+        font_zip="$OFFLINE_DIR/CascadiaCode.zip"
+        print_info "Using offline bundle"
+    else
+        print_error "Cannot download font and no offline bundle found."
+        print_info "https://www.nerdfonts.com/font-downloads"
+    fi
 
+    if [ -n "$font_zip" ]; then
+        unzip -o "$font_zip" -d "$FONT_DIR/CascadiaCode" >/dev/null 2>&1
+        [ "$font_zip" = "/tmp/CascadiaCode.zip" ] && rm -f /tmp/CascadiaCode.zip
         fc-cache -fv >/dev/null 2>&1
         print_success "CaskaydiaCove Nerd Font installed!"
-    else
-        print_error "Failed to download font. Please install manually from:"
-        print_info "https://www.nerdfonts.com/font-downloads"
     fi
 
     cd "$SCRIPT_DIR"
@@ -612,7 +719,6 @@ if [ "$INSTALL_NVIM" = true ]; then
 
     print_info "Neovim plugins will be installed automatically on first launch."
     print_warning "NOTE: This config does NOT include:"
-    print_warning "  - Auto-completion (nvim-cmp)"
     print_warning "  - Git file view (fugitive, diffview, etc.)"
     echo ""
 
@@ -624,17 +730,21 @@ if [ "$INSTALL_NVIM" = true ]; then
         echo ""
     fi
 
-    read -p "Would you like to open Neovim now to install plugins? (y/n): " -n 1 -r
-    echo ""
-
-    if [[ $REPLY =~ ^[Yy]$ ]]; then
-        print_info "Opening Neovim... Plugins will install automatically."
-        print_info "After installation completes, type :q to exit"
-        sleep 2
-        nvim +Lazy
-        print_success "Neovim setup complete!"
+    if ! check_internet && [ -d "$NVIM_DATA/lazy" ]; then
+        print_success "Plugins were restored from offline bundle. No need to download."
     else
-        print_info "Plugins will install automatically the first time you run: nvim"
+        read -p "Would you like to open Neovim now to install plugins? (y/n): " -n 1 -r
+        echo ""
+
+        if [[ $REPLY =~ ^[Yy]$ ]]; then
+            print_info "Opening Neovim... Plugins will install automatically."
+            print_info "After installation completes, type :q to exit"
+            sleep 2
+            nvim +Lazy
+            print_success "Neovim setup complete!"
+        else
+            print_info "Plugins will install automatically the first time you run: nvim"
+        fi
     fi
 
     echo ""

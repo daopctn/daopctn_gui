@@ -10,6 +10,8 @@ vim.opt.autoread = true
 -- Bootstrap lazy.nvim
 local lazypath = vim.fn.stdpath("data") .. "/lazy/lazy.nvim"
 if not (vim.uv or vim.loop).fs_stat(lazypath .. "/lua/lazy/init.lua") then
+  -- lazy.nvim not found (not installed and not restored from offline bundle)
+  -- Try to clone from GitHub
   vim.fn.system({ "rm", "-rf", lazypath })
   local lazyrepo = "https://github.com/folke/lazy.nvim.git"
   local out = vim.fn.system({ "git", "clone", "--filter=blob:none", "--branch=stable", lazyrepo, lazypath })
@@ -17,6 +19,7 @@ if not (vim.uv or vim.loop).fs_stat(lazypath .. "/lua/lazy/init.lua") then
     vim.api.nvim_echo({
       { "Failed to clone lazy.nvim:\n", "ErrorMsg" },
       { out, "WarningMsg" },
+      { "\nIf offline, run bundle.sh first then install.sh to restore plugins.", "WarningMsg" },
       { "\nPress any key to exit..." },
     },   true, {})
     vim.fn.getchar()
