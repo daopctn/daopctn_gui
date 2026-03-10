@@ -44,7 +44,7 @@ window-padding-y = 5
 cursor-style-blink = true
 cursor-color = #bd93f9
 cursor-opacity = 0.7
-custom-shader = /home/daopctn/.config/ghostty/shaders/cursor_smear.glsl
+custom-shader = ~/.config/ghostty/shaders/cursor_smear.glsl
 custom-shader-animation = true
 
 # -------------------------------------------

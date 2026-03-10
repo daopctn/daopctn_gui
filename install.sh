@@ -581,7 +581,7 @@ echo ""
 # ============================================
 # Step 5.5: Restore Offline Nvim Data (if no internet)
 # ============================================
-if [ "$INSTALL_NVIM" = true ] && ! check_internet; then
+if [ "$INSTALL_NVIM" = true ] && has_offline_file "nvim-plugins.tar.gz"; then
     echo -e "${PURPLE}═══ Offline: Restoring Neovim Data ═══${NC}"
     echo ""
 
@@ -757,7 +757,7 @@ if [ "$INSTALL_NVIM" = true ]; then
         echo ""
     fi
 
-    if ! check_internet && [ -d "$NVIM_DATA/lazy" ]; then
+    if has_offline_file "nvim-plugins.tar.gz" && [ -d "$NVIM_DATA/lazy" ]; then
         print_success "Plugins were restored from offline bundle. No need to download."
     else
         read -p "Would you like to open Neovim now to install plugins? (y/n): " -n 1 -r
