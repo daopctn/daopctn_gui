@@ -110,9 +110,9 @@ echo ""
 echo -e "${PURPLE}═══ 3/6: Bundling Treesitter Parsers ═══${NC}"
 echo ""
 
-TS_PARSER_DIR="$NVIM_DATA/lazy/nvim-treesitter/parser"
+TS_PARSER_DIR="$NVIM_DATA/site/parser"
 
-if [ -d "$TS_PARSER_DIR" ]; then
+if [ -d "$TS_PARSER_DIR" ] && [ "$(find "$TS_PARSER_DIR" -name "*.so" | wc -l)" -gt 0 ]; then
     PARSER_COUNT=$(find "$TS_PARSER_DIR" -name "*.so" | wc -l)
     print_info "Found $PARSER_COUNT compiled parsers"
     tar -czf "$OFFLINE_DIR/treesitter-parsers.tar.gz" -C "$TS_PARSER_DIR" .
@@ -120,7 +120,7 @@ if [ -d "$TS_PARSER_DIR" ]; then
     print_success "Treesitter parsers bundled ($TS_SIZE)"
 else
     print_warning "No treesitter parsers found at $TS_PARSER_DIR"
-    print_warning "To include them: open nvim, wait for treesitter to compile parsers, then re-run this script."
+    print_warning "To include them: open nvim, run :TSInstall! all, then re-run this script."
 fi
 
 echo ""

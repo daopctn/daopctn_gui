@@ -607,15 +607,11 @@ if [ "$INSTALL_NVIM" = true ] && has_offline_file "nvim-plugins.tar.gz"; then
 
     # Restore treesitter parsers
     if has_offline_file "treesitter-parsers.tar.gz"; then
-        ts_parser_dir="$NVIM_DATA/lazy/nvim-treesitter/parser"
-        if [ -d "$NVIM_DATA/lazy/nvim-treesitter" ]; then
-            mkdir -p "$ts_parser_dir"
-            print_info "Restoring treesitter parsers from offline bundle..."
-            tar -xzf "$OFFLINE_DIR/treesitter-parsers.tar.gz" -C "$ts_parser_dir"
-            print_success "Treesitter parsers restored"
-        else
-            print_warning "nvim-treesitter plugin not found. Restore plugins first."
-        fi
+        ts_parser_dir="$NVIM_DATA/site/parser"
+        mkdir -p "$ts_parser_dir"
+        print_info "Restoring treesitter parsers from offline bundle..."
+        tar -xzf "$OFFLINE_DIR/treesitter-parsers.tar.gz" -C "$ts_parser_dir"
+        print_success "Treesitter parsers restored"
     fi
 
     echo ""
