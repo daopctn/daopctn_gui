@@ -414,10 +414,10 @@ if [ "$INSTALL_STARSHIP" = true ]; then
 fi
 
 if [ "$INSTALL_GHOSTTY" = true ]; then
-    if command_exists "ghostty"; then
-        print_success "ghostty is installed"
+    if has_offline_file "ghostty.AppImage"; then
+        print_info "ghostty AppImage found — will install from offline/ghostty.AppImage"
     else
-        print_warning "ghostty is NOT installed — skipping Ghostty config"
+        print_warning "offline/ghostty.AppImage not found — skipping Ghostty config"
         INSTALL_GHOSTTY=false
     fi
 fi
@@ -543,6 +543,33 @@ echo -e "${PURPLE}═══ Step 5: Installing Configurations ═══${NC}"
 echo ""
 
 [ "$INSTALL_NVIM" = true ]     && install_config "nvim"
+if [ "$INSTALL_GHOSTTY" = true ]; then
+    echo -e "${PURPLE}═══ Installing Ghostty AppImage ═══${NC}"
+    echo ""
+
+    # Remove snap version if present
+    if snap list ghostty &>/dev/null 2>&1; then
+        print_info "Removing Ghostty snap..."
+        sudo snap remove ghostty
+        print_success "Ghostty snap removed"
+    fi
+
+    mkdir -p "$HOME/.local/bin"
+    cp "$OFFLINE_DIR/ghostty.AppImage" "$HOME/.local/bin/ghostty"
+    chmod +x "$HOME/.local/bin/ghostty"
+
+    if [ -x "$HOME/.local/bin/ghostty" ]; then
+        print_success "Ghostty installed to ~/.local/bin/ghostty"
+        if [[ ":$PATH:" != *":$HOME/.local/bin:"* ]]; then
+            print_warning "~/.local/bin is not in your PATH."
+            print_info "Add to your shell config: export PATH=\"\$HOME/.local/bin:\$PATH\""
+        fi
+    else
+        print_error "Ghostty install failed — skipping config"
+        INSTALL_GHOSTTY=false
+    fi
+    echo ""
+fi
 [ "$INSTALL_GHOSTTY" = true ]  && install_config "ghostty"
 [ "$INSTALL_BTOP" = true ]     && install_config "btop"
 [ "$INSTALL_CAVA" = true ]     && install_config "cava"

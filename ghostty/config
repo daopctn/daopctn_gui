@@ -29,12 +29,12 @@ font-family = CaskaydiaCove Nerd Font
 font-size = 11
 
 # Background image (from Terminator config)
-background-image = /home/daopctn/Downloads/vagabond-1771428199272-6501.jpg
+background-image = /home/daopctn/Downloads/1334109.jpeg
 background-image-fit = stretch
 background-image-opacity = 0.01
 
 # Start maximized (full screen windowed)
-fullscreen = true
+fullscreen = false
 
 # Window padding/margins (from Kitty config: window_margin_width 5)
 window-padding-x = 5
