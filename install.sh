@@ -632,6 +632,22 @@ if [ "$INSTALL_GHOSTTY" = true ]; then
         print_info "  gsettings set org.gnome.desktop.default-applications.terminal exec 'ghostty'"
     fi
 
+    # Create .desktop file for app launcher
+    DESKTOP_DIR="$HOME/.local/share/applications"
+    mkdir -p "$DESKTOP_DIR"
+    cat > "$DESKTOP_DIR/ghostty.desktop" <<EOF
+[Desktop Entry]
+Name=Ghostty
+Comment=Fast, feature-rich terminal emulator
+Exec=$HOME/.local/bin/ghostty
+Icon=utilities-terminal
+Type=Application
+Categories=System;TerminalEmulator;
+StartupNotify=true
+EOF
+    chmod +x "$DESKTOP_DIR/ghostty.desktop"
+    print_success "Ghostty added to app launcher"
+
     echo ""
 fi
 
