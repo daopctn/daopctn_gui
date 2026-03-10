@@ -345,15 +345,15 @@ echo ""
 
 MISSING_DEPS=()
 
-# Always need git and curl
-for dep in "git" "curl"; do
-    if command_exists "$dep"; then
-        print_success "$dep is installed"
+# curl is only needed if no offline bundle (for downloading)
+if ! has_offline_file "nvim-linux-$(uname -m).tar.gz"; then
+    if command_exists "curl"; then
+        print_success "curl is installed"
     else
-        print_warning "$dep is NOT installed"
-        MISSING_DEPS+=("$dep")
+        print_warning "curl is NOT installed (needed to download files — run bundle.sh first for offline use)"
+        MISSING_DEPS+=("curl")
     fi
-done
+fi
 
 # Only check deps for selected components
 if [ "$INSTALL_NVIM" = true ]; then
@@ -367,13 +367,11 @@ if [ "$INSTALL_NVIM" = true ]; then
         MISSING_DEPS+=("nvim")
     fi
 
-    # npm is required by mason.nvim to install LSP servers
-    # (pyright, ts_ls, bashls, jsonls, yamlls all need npm)
+    # npm is only needed to RUN npm-based LSP servers, not to install them
     if command_exists "npm"; then
-        print_success "npm is installed (required by mason.nvim for LSP servers)"
+        print_success "npm is installed"
     else
-        print_warning "npm is NOT installed (required by mason.nvim for LSP servers)"
-        MISSING_DEPS+=("npm")
+        print_warning "npm is NOT installed — npm-based LSP servers (pyright, ts_ls, bashls, jsonls, yamlls) won't run"
     fi
 fi
 
