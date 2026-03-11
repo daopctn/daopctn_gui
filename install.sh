@@ -471,7 +471,7 @@ if [ ${#MISSING_DEPS[@]} -gt 0 ]; then
         # Install starship separately
         if [[ " ${MISSING_DEPS[@]} " =~ " starship " ]]; then
             print_info "Installing starship..."
-            if check_internet && curl -sS https://starship.rs/install.sh | sh -s -- -y; then
+            if check_internet && (mkdir -p "$HOME/.local/bin" && curl -sS https://starship.rs/install.sh | sh -s -- --yes --bin-dir "$HOME/.local/bin"); then
                 print_success "Starship installed"
             elif has_offline_file "starship.tar.gz"; then
                 print_info "Using offline bundle for starship..."
