@@ -58,6 +58,33 @@ sudo pacman -S neovim btop cava neofetch git curl unzip
 curl -sS https://starship.rs/install.sh | sh
 ```
 
+#### Neovim Plugin Dependencies
+
+These are required for full Neovim functionality (LSP, linting, formatting, search):
+
+```bash
+# Telescope live grep
+sudo apt install ripgrep
+
+# Mason LSP servers (pyright, ts_ls, bashls, jsonls, yamlls)
+sudo apt install nodejs npm
+
+# C/C++ tools (clangd formatter + linter)
+sudo apt install clang-format cppcheck
+
+# XML formatting (xmllint)
+sudo apt install libxml2-utils
+
+# Compile telescope-fzf-native plugin
+sudo apt install build-essential
+
+# Python tools (formatter + linters)
+pip3 install black isort flake8 cpplint
+
+# CMake tools
+pip3 install cmake-format cmake-lint
+```
+
 ### Step 2: Backup Existing Configs
 
 ```bash

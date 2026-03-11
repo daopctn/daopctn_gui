@@ -8,8 +8,13 @@ return {
   {
     "williamboman/mason-lspconfig.nvim",
     config = function()
+      -- Skip ensure_installed if mason packages are already present (avoids failed
+      -- download attempts when running without internet after an offline restore).
+      local mason_pkg_dir = vim.fn.stdpath("data") .. "/mason/packages"
+      local has_mason_packages = #vim.fn.glob(mason_pkg_dir .. "/*", false, true) > 0
+
       require("mason-lspconfig").setup({
-        ensure_installed = {
+        ensure_installed = has_mason_packages and {} or {
           "lua_ls",           -- Lua
           "pyright",          -- Python
           "clangd",           -- C/C++
