@@ -160,17 +160,20 @@ command_exists() {
 }
 
 check_internet() {
-    if [ -n "$HAS_INTERNET" ]; then
-        [ "$HAS_INTERNET" = "yes" ]
-        return
-    fi
-    if curl -s --connect-timeout 3 --max-time 5 https://github.com >/dev/null 2>&1; then
-        HAS_INTERNET="yes"
-        return 0
-    else
-        HAS_INTERNET="no"
-        return 1
-    fi
+    # Offline-only mode: internet checks disabled
+    # if [ -n "$HAS_INTERNET" ]; then
+    #     [ "$HAS_INTERNET" = "yes" ]
+    #     return
+    # fi
+    # if curl -s --connect-timeout 3 --max-time 5 https://github.com >/dev/null 2>&1; then
+    #     HAS_INTERNET="yes"
+    #     return 0
+    # else
+    #     HAS_INTERNET="no"
+    #     return 1
+    # fi
+    HAS_INTERNET="no"
+    return 1
 }
 
 has_offline_file() {
@@ -225,11 +228,12 @@ install_nvim_from_release() {
 
     print_info "Installing Neovim v${version}..."
 
-    # Try internet first, fall back to offline bundle
-    if check_internet && curl -fLo /tmp/nvim.tar.gz "$url" 2>/dev/null; then
-        tarball="/tmp/nvim.tar.gz"
-        print_info "Downloaded from GitHub"
-    elif has_offline_file "$nvim_file"; then
+    # Offline-only: internet download disabled
+    # if check_internet && curl -fLo /tmp/nvim.tar.gz "$url" 2>/dev/null; then
+    #     tarball="/tmp/nvim.tar.gz"
+    #     print_info "Downloaded from GitHub"
+    # elif has_offline_file "$nvim_file"; then
+    if has_offline_file "$nvim_file"; then
         tarball="$OFFLINE_DIR/$nvim_file"
         print_info "Using offline bundle"
     else
@@ -471,9 +475,11 @@ if [ ${#MISSING_DEPS[@]} -gt 0 ]; then
         # Install starship separately
         if [[ " ${MISSING_DEPS[@]} " =~ " starship " ]]; then
             print_info "Installing starship..."
-            if check_internet && (mkdir -p "$HOME/.local/bin" && curl -sS https://starship.rs/install.sh | sh -s -- --yes --bin-dir "$HOME/.local/bin"); then
-                print_success "Starship installed"
-            elif has_offline_file "starship.tar.gz"; then
+            # Offline-only: internet install disabled
+            # if check_internet && (mkdir -p "$HOME/.local/bin" && curl -sS https://starship.rs/install.sh | sh -s -- --yes --bin-dir "$HOME/.local/bin"); then
+            #     print_success "Starship installed"
+            # elif has_offline_file "starship.tar.gz"; then
+            if has_offline_file "starship.tar.gz"; then
                 print_info "Using offline bundle for starship..."
                 tar -xzf "$OFFLINE_DIR/starship.tar.gz" -C /tmp/
                 mkdir -p "$HOME/.local/bin"
@@ -668,10 +674,12 @@ if [ "$INSTALL_FONTS" = true ]; then
     FONT_URL="https://github.com/ryanoasis/nerd-fonts/releases/latest/download/CascadiaCode.zip"
     font_zip=""
 
-    if check_internet && curl -fLo /tmp/CascadiaCode.zip "$FONT_URL" 2>/dev/null; then
-        font_zip="/tmp/CascadiaCode.zip"
-        print_info "Downloaded from GitHub"
-    elif has_offline_file "CascadiaCode.zip"; then
+    # Offline-only: internet download disabled
+    # if check_internet && curl -fLo /tmp/CascadiaCode.zip "$FONT_URL" 2>/dev/null; then
+    #     font_zip="/tmp/CascadiaCode.zip"
+    #     print_info "Downloaded from GitHub"
+    # elif has_offline_file "CascadiaCode.zip"; then
+    if has_offline_file "CascadiaCode.zip"; then
         font_zip="$OFFLINE_DIR/CascadiaCode.zip"
         print_info "Using offline bundle"
     else
