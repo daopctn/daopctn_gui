@@ -1,0 +1,36 @@
+# Manga Mono — Ghostty Theme
+# Ink on black, one blue. Manga = black ink + white paper + grey screentone.
+# Blue is the sole spot color. ANSI palette stays greyscale + blue;
+# red kept muted/functional for errors and diff-delete.
+
+# --- normal ---
+palette = 0=#0d1117
+palette = 1=#bf6a5e
+palette = 2=#6e8b9e
+palette = 3=#9aa3ad
+palette = 4=#4a9eff
+palette = 5=#7c8aa0
+palette = 6=#6fb3d6
+palette = 7=#b9c1cb
+
+# --- bright ---
+palette = 8=#484f58
+palette = 9=#d0746e
+palette = 10=#8fa6b5
+palette = 11=#c0c8d0
+palette = 12=#74b4ff
+palette = 13=#9aa8bd
+palette = 14=#9cd0ec
+palette = 15=#e8eaed
+
+# --- core ---
+background = #0d1117
+foreground = #e8eaed
+
+# --- cursor: the one blue ---
+cursor-color = #4a9eff
+cursor-text = #0d1117
+
+# --- selection: raised screentone ---
+selection-background = #1c2128
+selection-foreground = #e8eaed

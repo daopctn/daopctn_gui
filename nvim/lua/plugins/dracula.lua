@@ -1,5 +1,6 @@
 return {
   "Mofiqul/dracula.nvim",
+  enabled = false,
   priority = 1000,
   config = function()
     require("dracula").setup({

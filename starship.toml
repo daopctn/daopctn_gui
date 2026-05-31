@@ -28,7 +28,7 @@ $cmd_duration\
 $line_break\
 $character"""
 
-palette = 'dracula'
+palette = 'manga-mono-light'
 
 [os]
 disabled = false
@@ -150,7 +150,7 @@ disabled = true
 
 [character]
 disabled = false
-success_symbol = '[❯](bold fg:green)'
+success_symbol = '[❯](bold fg:blue)'
 error_symbol = '[❯](bold fg:red)'
 vimcmd_symbol = '[❮](bold fg:green)'
 vimcmd_replace_one_symbol = '[❮](bold fg:purple)'
@@ -178,3 +178,31 @@ comment = "#6272a4"
 base = "#1e1e2e"
 mantle = "#181825"
 crust = "#11111b"
+
+# ── Manga Mono — light paper blocks on dark terminal (recommended) ──
+[palettes.manga-mono-light]
+purple  = "#e2dfd5"
+cyan    = "#8cc0e8"
+pink    = "#cfccc2"
+green   = "#d8d5cb"
+comment = "#eae7df"
+blue    = "#4a9eff"
+yellow  = "#4a9eff"
+red     = "#d0746e"
+crust   = "#14171a"
+base    = "#0d1117"
+mantle  = "#161b22"
+
+# ── Manga Mono — dark grey blocks on light terminal ──
+[palettes.manga-mono-dark]
+purple  = "#1c2128"
+cyan    = "#4a9eff"
+pink    = "#30363d"
+green   = "#21262d"
+comment = "#161b22"
+blue    = "#4a9eff"
+yellow  = "#4a9eff"
+red     = "#bf6a5e"
+crust   = "#e8eaed"
+base    = "#0d1117"
+mantle  = "#161b22"

@@ -1,0 +1,60 @@
+# Manga Mono — btop theme
+# Ink on black. One blue. Greyscale + blue accent only.
+
+theme[main_bg]="#0d1117"
+theme[main_fg]="#e8eaed"
+theme[title]="#e8eaed"
+theme[hi_fg]="#4a9eff"
+theme[selected_bg]="#2d6fc4"
+theme[selected_fg]="#e8eaed"
+theme[inactive_fg]="#484f58"
+theme[graph_text]="#b9c1cb"
+theme[meter_bg]="#1c2128"
+theme[proc_misc]="#6e7681"
+
+# Box outlines — all blue or grey
+theme[cpu_box]="#4a9eff"
+theme[mem_box]="#6e7681"
+theme[net_box]="#30363d"
+theme[proc_box]="#4a9eff"
+
+# Temperature gradient: grey → blue → bright blue
+theme[temp_start]="#6e7681"
+theme[temp_mid]="#4a9eff"
+theme[temp_end]="#74b4ff"
+
+# CPU graph gradient: dark → blue
+theme[cpu_start]="#1c2128"
+theme[cpu_mid]="#2d6fc4"
+theme[cpu_end]="#4a9eff"
+
+# Memory gradient
+theme[free_start]="#1c2128"
+theme[free_mid]="#30363d"
+theme[free_end]="#484f58"
+
+theme[cached_start]="#1c2128"
+theme[cached_mid]="#2d3a4a"
+theme[cached_end]="#2d6fc4"
+
+theme[available_start]="#0d1117"
+theme[available_mid]="#1c2e3a"
+theme[available_end]="#4a9eff"
+
+theme[used_start]="#1c2128"
+theme[used_mid]="#2d3a5a"
+theme[used_end]="#4a9eff"
+
+# Download/upload net graphs
+theme[download_start]="#1c2128"
+theme[download_mid]="#2d6fc4"
+theme[download_end]="#4a9eff"
+
+theme[upload_start]="#1c2128"
+theme[upload_mid]="#30363d"
+theme[upload_end]="#6e7681"
+
+# Process status colors
+theme[process_start]="#1c2128"
+theme[process_mid]="#2d6fc4"
+theme[process_end]="#4a9eff"

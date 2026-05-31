@@ -22,7 +22,7 @@
 # a full restart to take effect.
 
 # Theme
-theme = dracula
+theme = manga-mono
 
 # Font
 font-family = CaskaydiaCove Nerd Font
@@ -42,7 +42,7 @@ window-padding-y = 5
 
 # Cursor
 cursor-style-blink = true
-cursor-color = #bd93f9
+cursor-color = #4a9eff
 cursor-opacity = 0.7
 custom-shader = ~/.config/ghostty/shaders/cursor_smear.glsl
 custom-shader-animation = true
