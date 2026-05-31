@@ -15,8 +15,8 @@ return {
         base07 = "#ffffff",            -- bright white
         base08 = "#bf6a5e",         -- constants, numbers, errors
         base09 = "#d0746e",  -- bold errors
-        base0A = "#c4cdd6",        -- types, classes
-        base0B = "#7da8be",      -- strings
+        base0A = "#d4a574",        -- types, classes (warm amber — sepia ink)
+        base0B = "#87a882",        -- strings (muted sage green)
         base0C = "#6fb3d6",    -- regex, special strings
         base0D = "#4a9eff",          -- functions, links
         base0E = "#74b4ff",   -- keywords
