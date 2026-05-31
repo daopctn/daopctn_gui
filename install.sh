@@ -36,6 +36,7 @@ INSTALL_STARSHIP=false
 INSTALL_FONTS=false
 INSTALL_GTK=false
 INSTALL_TERMINATOR=false
+INSTALL_CLANGD=false
 INSTALL_ALL=false
 REINSTALL=false
 INTERACTIVE=true
@@ -133,6 +134,11 @@ while [[ $# -gt 0 ]]; do
             INTERACTIVE=false
             shift
             ;;
+        --clangd)
+            INSTALL_CLANGD=true
+            INTERACTIVE=false
+            shift
+            ;;
         -h|--help)
             show_usage
             exit 0
@@ -156,6 +162,7 @@ if [ "$INSTALL_ALL" = true ]; then
     INSTALL_FONTS=true
     INSTALL_GTK=true
     INSTALL_TERMINATOR=true
+    INSTALL_CLANGD=true
 fi
 
 # ============================================
@@ -337,6 +344,7 @@ if [ "$INTERACTIVE" = true ]; then
     ask_install "starship"  "Starship prompt config"        && INSTALL_STARSHIP=true
     ask_install "gtk"       "GTK 3 theme (manga-mono)"      && INSTALL_GTK=true
     ask_install "terminator" "Terminator config"            && INSTALL_TERMINATOR=true
+    ask_install "clangd"    "clangd LSP config (GCC11+Qt5)" && INSTALL_CLANGD=true
     ask_install "fonts"     "CaskaydiaCove Nerd Font"       && INSTALL_FONTS=true
 
     echo ""
@@ -346,6 +354,7 @@ if [ "$INTERACTIVE" = true ]; then
        [ "$INSTALL_BTOP" = false ] && [ "$INSTALL_CAVA" = false ] && \
        [ "$INSTALL_NEOFETCH" = false ] && [ "$INSTALL_STARSHIP" = false ] && \
        [ "$INSTALL_GTK" = false ] && [ "$INSTALL_TERMINATOR" = false ] && \
+       [ "$INSTALL_CLANGD" = false ] && \
        [ "$INSTALL_FONTS" = false ]; then
         print_error "Nothing selected. Exiting."
         exit 0
@@ -363,6 +372,7 @@ echo ""
 [ "$INSTALL_STARSHIP" = true ]  && echo -e "  ${GREEN}[✓]${NC} Starship"
 [ "$INSTALL_GTK" = true ]       && echo -e "  ${GREEN}[✓]${NC} GTK 3"
 [ "$INSTALL_TERMINATOR" = true ] && echo -e "  ${GREEN}[✓]${NC} Terminator"
+[ "$INSTALL_CLANGD" = true ]    && echo -e "  ${GREEN}[✓]${NC} clangd config"
 [ "$INSTALL_FONTS" = true ]     && echo -e "  ${GREEN}[✓]${NC} Nerd Fonts"
 echo ""
 
@@ -541,6 +551,7 @@ if [ "$INSTALL_BTOP" = true ] && backup_config "btop"; then BACKUP_CREATED=true;
 if [ "$INSTALL_CAVA" = true ] && backup_config "cava"; then BACKUP_CREATED=true; fi
 if [ "$INSTALL_NEOFETCH" = true ] && backup_config "neofetch"; then BACKUP_CREATED=true; fi
 if [ "$INSTALL_STARSHIP" = true ] && backup_config "starship.toml"; then BACKUP_CREATED=true; fi
+if [ "$INSTALL_CLANGD" = true ] && backup_config "clangd"; then BACKUP_CREATED=true; fi
 
 if [ "$BACKUP_CREATED" = true ]; then
     print_success "Backups saved to: $BACKUP_DIR"
@@ -589,6 +600,7 @@ fi
 [ "$INSTALL_CAVA" = true ]      && install_config "cava"
 [ "$INSTALL_NEOFETCH" = true ]  && install_config "neofetch"
 [ "$INSTALL_STARSHIP" = true ]  && install_config "starship.toml"
+[ "$INSTALL_CLANGD" = true ]   && install_config "clangd"
 
 if [ "$INSTALL_GTK" = true ]; then
     print_info "Installing GTK 3 manga-mono theme..."
