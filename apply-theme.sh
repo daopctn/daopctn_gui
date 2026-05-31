@@ -259,13 +259,13 @@ return {
         base06 = "$SOFT",          -- light fg
         base07 = "#ffffff",            -- bright white
         base08 = "$BRICK",         -- constants, numbers, errors
-        base09 = "$BRICK_BRIGHT",  -- bold errors
+        base09 = "$NVIM_NUMBERS",      -- numbers/booleans (orange)
         base0A = "$NVIM_TYPES",        -- types, classes
         base0B = "$NVIM_STRINGS",      -- strings
         base0C = "$BLUE_LIGHT",    -- regex, special strings
         base0D = "$BLUE",          -- functions, links
         base0E = "$BLUE_BRIGHT",   -- keywords
-        base0F = "$BRICK",         -- deprecated/embedded
+        base0F = "$NVIM_DEPRECATED",   -- deprecated/embedded (dim)
       },
       use_cterm = true,
     })

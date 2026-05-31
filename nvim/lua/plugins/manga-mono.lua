@@ -14,13 +14,13 @@ return {
         base06 = "#b9c1cb",          -- light fg
         base07 = "#ffffff",            -- bright white
         base08 = "#bf6a5e",         -- constants, numbers, errors
-        base09 = "#d0746e",  -- bold errors
-        base0A = "#d4a574",        -- types, classes (warm amber — sepia ink)
-        base0B = "#87a882",        -- strings (muted sage green)
-        base0C = "#6fb3d6",    -- regex, special strings
-        base0D = "#4a9eff",          -- functions, links
-        base0E = "#74b4ff",   -- keywords
-        base0F = "#bf6a5e",         -- deprecated/embedded
+        base09 = "#e09a5a",            -- numbers/booleans (orange — distinct from brick by hue+lum)
+        base0A = "#d4a574",            -- types, classes (warm amber)
+        base0B = "#87a882",            -- strings (muted sage green)
+        base0C = "#6fb3d6",            -- regex, special strings
+        base0D = "#4a9eff",            -- functions, links
+        base0E = "#74b4ff",            -- keywords
+        base0F = "#4a3f3f",            -- deprecated/embedded (dim — clearly dead code)
       },
       use_cterm = true,
     })
