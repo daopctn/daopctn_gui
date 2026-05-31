@@ -7,35 +7,19 @@
   zoom_in = Ctrl+plus
   zoom_out = Ctrl+minus
 
-[layouts]
-  [default]
-    [[window]]
-      maximised = True
-      fullscreen = False
-      width = 160
-      height = 48
-
 [profiles]
   [[manga-mono]]
     use_system_font = False
-    font = JetBrains Mono 12
+    font = CaskaydiaCove Nerd Font Mono 12
     allow_bold = True
     cursor_shape = BLOCK
-    cursor_foreground_color = "(13, 17, 23)"
-    cursor_color = "(74, 158, 255)"
-    foreground_color = "(232, 234, 237)"
-    background_color = "(13, 17, 23)"
-    highlight_background_color = "(28, 33, 40)"
-    highlight_foreground_color = "(232, 234, 237)"
+    cursor_foreground_color = "13, 17, 23"
+    cursor_color = "74, 158, 255"
+    foreground_color = "232, 234, 237"
+    background_color = "13, 17, 23"
+    highlight_background_color = "28, 33, 40"
+    highlight_foreground_color = "232, 234, 237"
     bold_colors_same_as_fg = False
     scrollback_lines = 5000
-    palette = "(13, 17, 23):(191, 106, 94):(110, 139, 158):(154, 163, 173):(74, 158, 255):(124, 138, 160):(111, 179, 214):(185, 193, 203):(72, 79, 88):(208, 116, 110):(143, 166, 181):(192, 200, 208):(116, 180, 255):(154, 168, 189):(156, 208, 236):(232, 234, 237)"
+    palette = "#0d1117:#bf6a5e:#6e8b9e:#9aa3ad:#4a9eff:#7c8aa0:#6fb3d6:#b9c1cb:#484f58:#d0746e:#8fa6b5:#c0c8d0:#74b4ff:#9aa8bd:#9cd0ec:#e8eaed"
     background_mode = dark
-
-[layouts]
-  [default]
-    [[window]]
-      maximised = True
-      fullscreen = False
-      width = 160
-      height = 48
