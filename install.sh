@@ -223,13 +223,8 @@ install_config() {
         return
     fi
 
-    if [[ $INSTALL_METHOD == "1" ]]; then
-        ln -sf "$src" "$dest"
-        print_success "Symlinked $name"
-    else
-        cp -r "$src" "$dest"
-        print_success "Copied $name"
-    fi
+    cp -r "$src" "$dest"
+    print_success "Copied $name"
 }
 
 # ============================================
@@ -533,22 +528,9 @@ fi
 echo ""
 
 # ============================================
-# Step 3: Choose Installation Method
+# Step 3: Backup Existing Configs (only selected)
 # ============================================
-echo -e "${PURPLE}═══ Step 3: Installation Method ═══${NC}"
-echo ""
-echo "Choose installation method:"
-echo "  1) Symlinks (Recommended) - Changes to files in this repo will apply immediately"
-echo "  2) Copy - Creates independent copies in ~/.config"
-echo ""
-read -p "Enter choice (1 or 2): " -n 1 -r INSTALL_METHOD
-echo ""
-echo ""
-
-# ============================================
-# Step 4: Backup Existing Configs (only selected)
-# ============================================
-echo -e "${PURPLE}═══ Step 4: Backing Up Existing Configs ═══${NC}"
+echo -e "${PURPLE}═══ Step 3: Backing Up Existing Configs ═══${NC}"
 echo ""
 
 BACKUP_CREATED=false
@@ -569,9 +551,9 @@ fi
 echo ""
 
 # ============================================
-# Step 5: Install Selected Configs
+# Step 4: Install Selected Configs
 # ============================================
-echo -e "${PURPLE}═══ Step 5: Installing Configurations ═══${NC}"
+echo -e "${PURPLE}═══ Step 4: Installing Configurations ═══${NC}"
 echo ""
 
 [ "$INSTALL_NVIM" = true ]      && install_config "nvim"
@@ -706,10 +688,10 @@ EOF
 fi
 
 # ============================================
-# Step 6: Install Nerd Fonts (if selected)
+# Step 5: Install Nerd Fonts (if selected)
 # ============================================
 if [ "$INSTALL_FONTS" = true ]; then
-    echo -e "${PURPLE}═══ Step 6: Nerd Fonts Setup ═══${NC}"
+    echo -e "${PURPLE}═══ Step 5: Nerd Fonts Setup ═══${NC}"
     echo ""
 
     FONT_DIR="$HOME/.local/share/fonts"
@@ -745,10 +727,10 @@ if [ "$INSTALL_FONTS" = true ]; then
 fi
 
 # ============================================
-# Step 7: Setup Shell Integration (if starship selected)
+# Step 6: Setup Shell Integration (if starship selected)
 # ============================================
 if [ "$INSTALL_STARSHIP" = true ]; then
-    echo -e "${PURPLE}═══ Step 7: Shell Integration (Starship) ═══${NC}"
+    echo -e "${PURPLE}═══ Step 6: Shell Integration (Starship) ═══${NC}"
     echo ""
 
     SHELL_NAME=$(basename "$SHELL")
@@ -802,10 +784,10 @@ if [ "$INSTALL_STARSHIP" = true ]; then
 fi
 
 # ============================================
-# Step 8: Neovim Setup (if nvim selected)
+# Step 7: Neovim Setup (if nvim selected)
 # ============================================
 if [ "$INSTALL_NVIM" = true ]; then
-    echo -e "${PURPLE}═══ Step 8: Neovim Plugin Installation ═══${NC}"
+    echo -e "${PURPLE}═══ Step 7: Neovim Plugin Installation ═══${NC}"
     echo ""
 
     print_info "Neovim plugins will be installed automatically on first launch."
