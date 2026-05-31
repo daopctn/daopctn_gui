@@ -84,5 +84,25 @@ keybind = ctrl+shift+n=new_window
 # Fullscreen
 keybind = ctrl+shift+f11=toggle_fullscreen
 
+# -------------------------------------------
+# Vim-style scrollback
+# -------------------------------------------
+
+# j/k — scroll by line
+keybind = ctrl+shift+j=scroll_page_lines:3
+keybind = ctrl+shift+k=scroll_page_lines:-3
+
+# d/u — half page (Ctrl+D / Ctrl+U feel)
+keybind = ctrl+shift+d=scroll_page_fractional:0.5
+keybind = ctrl+shift+u=scroll_page_fractional:-0.5
+
+# f/b — full page
+keybind = ctrl+shift+f=scroll_page_down
+keybind = ctrl+shift+b=scroll_page_up
+
+# G / gg — top / bottom
+keybind = ctrl+shift+end=scroll_to_bottom
+keybind = ctrl+shift+home=scroll_to_top
+
 # Quit
 keybind = ctrl+shift+q=quit
