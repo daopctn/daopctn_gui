@@ -13,10 +13,10 @@ return {
         base05 = "#e8eaed",          -- default fg
         base06 = "#b9c1cb",          -- light fg
         base07 = "#ffffff",            -- bright white
-        base08 = "#bf6a5e",            -- constants, numbers, errors
-        base09 = "#d0746e",            -- bold errors
-        base0A = "#c4cdd6",            -- types, classes (brighter than line numbers)
-        base0B = "#7da8be",            -- strings (blue-tinted grey, distinct from both)
+        base08 = "#bf6a5e",         -- constants, numbers, errors
+        base09 = "#d0746e",  -- bold errors
+        base0A = "#c4cdd6",        -- types, classes
+        base0B = "#7da8be",      -- strings
         base0C = "#6fb3d6",    -- regex, special strings
         base0D = "#4a9eff",          -- functions, links
         base0E = "#74b4ff",   -- keywords
