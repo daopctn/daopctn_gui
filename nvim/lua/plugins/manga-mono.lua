@@ -12,11 +12,11 @@ return {
         base04 = "#9aa3ad",        -- inactive fg / line numbers
         base05 = "#e8eaed",          -- default fg
         base06 = "#b9c1cb",          -- light fg
-        base07 = "#e8eaed",       -- bright white
-        base08 = "#bf6a5e",         -- constants, numbers, errors
-        base09 = "#d0746e",  -- bold errors
-        base0A = "#9aa3ad",        -- types, classes
-        base0B = "#8fa6b5",       -- strings
+        base07 = "#ffffff",            -- bright white
+        base08 = "#bf6a5e",            -- constants, numbers, errors
+        base09 = "#d0746e",            -- bold errors
+        base0A = "#c4cdd6",            -- types, classes (brighter than line numbers)
+        base0B = "#7da8be",            -- strings (blue-tinted grey, distinct from both)
         base0C = "#6fb3d6",    -- regex, special strings
         base0D = "#4a9eff",          -- functions, links
         base0E = "#74b4ff",   -- keywords

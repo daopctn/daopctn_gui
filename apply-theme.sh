@@ -257,11 +257,11 @@ return {
         base04 = "$ANSI_3",        -- inactive fg / line numbers
         base05 = "$TEXT",          -- default fg
         base06 = "$SOFT",          -- light fg
-        base07 = "$ANSI_15",       -- bright white
+        base07 = "#ffffff",            -- bright white
         base08 = "$BRICK",         -- constants, numbers, errors
         base09 = "$BRICK_BRIGHT",  -- bold errors
-        base0A = "$ANSI_3",        -- types, classes
-        base0B = "$ANSI_10",       -- strings
+        base0A = "$NVIM_TYPES",        -- types, classes
+        base0B = "$NVIM_STRINGS",      -- strings
         base0C = "$BLUE_LIGHT",    -- regex, special strings
         base0D = "$BLUE",          -- functions, links
         base0E = "$BLUE_BRIGHT",   -- keywords
