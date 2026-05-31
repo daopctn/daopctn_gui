@@ -1,7 +1,7 @@
 #!/bin/bash
 
 # daopctn_gui Installation Script
-# Automated setup for Dracula-themed terminal environment
+# Automated setup for Manga Mono terminal environment
 # Designed for Ubuntu and similar Debian-based Linux distributions
 
 set -e  # Exit on error
@@ -34,6 +34,8 @@ INSTALL_CAVA=false
 INSTALL_NEOFETCH=false
 INSTALL_STARSHIP=false
 INSTALL_FONTS=false
+INSTALL_GTK=false
+INSTALL_TERMINATOR=false
 INSTALL_ALL=false
 INTERACTIVE=true
 
@@ -44,7 +46,7 @@ show_usage() {
     echo -e "${PURPLE}"
     echo "╔═══════════════════════════════════════════════════════╗"
     echo "║        daopctn_gui Installation Script               ║"
-    echo "║        Dracula Theme Terminal Setup                  ║"
+    echo "║        Manga Mono Terminal Setup                  ║"
     echo "╚═══════════════════════════════════════════════════════╝"
     echo -e "${NC}"
     echo "Usage: ./install.sh [OPTIONS]"
@@ -113,6 +115,16 @@ while [[ $# -gt 0 ]]; do
             INTERACTIVE=false
             shift
             ;;
+        --gtk)
+            INSTALL_GTK=true
+            INTERACTIVE=false
+            shift
+            ;;
+        --terminator)
+            INSTALL_TERMINATOR=true
+            INTERACTIVE=false
+            shift
+            ;;
         -h|--help)
             show_usage
             exit 0
@@ -134,6 +146,8 @@ if [ "$INSTALL_ALL" = true ]; then
     INSTALL_NEOFETCH=true
     INSTALL_STARSHIP=true
     INSTALL_FONTS=true
+    INSTALL_GTK=true
+    INSTALL_TERMINATOR=true
 fi
 
 # ============================================
@@ -269,7 +283,7 @@ echo -e "${PURPLE}"
 echo "╔═══════════════════════════════════════════════════════╗"
 echo "║                                                       ║"
 echo "║        daopctn_gui Installation Script               ║"
-echo "║        Dracula Theme Terminal Setup                  ║"
+echo "║        Manga Mono Terminal Setup                  ║"
 echo "║                                                       ║"
 echo "╚═══════════════════════════════════════════════════════╝"
 echo -e "${NC}"
@@ -305,13 +319,15 @@ if [ "$INTERACTIVE" = true ]; then
         [[ $REPLY =~ ^[Yy]$ ]]
     }
 
-    ask_install "nvim"     "Neovim editor config"                   && INSTALL_NVIM=true
-    ask_install "ghostty"  "Ghostty terminal config"                && INSTALL_GHOSTTY=true
-    ask_install "btop"     "btop system monitor config"             && INSTALL_BTOP=true
-    ask_install "cava"     "cava audio visualizer config"           && INSTALL_CAVA=true
-    ask_install "neofetch" "neofetch system info config"            && INSTALL_NEOFETCH=true
-    ask_install "starship" "Starship prompt config"                 && INSTALL_STARSHIP=true
-    ask_install "fonts"    "CaskaydiaCove Nerd Font"                && INSTALL_FONTS=true
+    ask_install "nvim"       "Neovim editor config"          && INSTALL_NVIM=true
+    ask_install "ghostty"   "Ghostty terminal config"       && INSTALL_GHOSTTY=true
+    ask_install "btop"      "btop system monitor config"    && INSTALL_BTOP=true
+    ask_install "cava"      "cava audio visualizer config"  && INSTALL_CAVA=true
+    ask_install "neofetch"  "neofetch system info config"   && INSTALL_NEOFETCH=true
+    ask_install "starship"  "Starship prompt config"        && INSTALL_STARSHIP=true
+    ask_install "gtk"       "GTK 3 theme (manga-mono)"      && INSTALL_GTK=true
+    ask_install "terminator" "Terminator config"            && INSTALL_TERMINATOR=true
+    ask_install "fonts"     "CaskaydiaCove Nerd Font"       && INSTALL_FONTS=true
 
     echo ""
 
@@ -319,6 +335,7 @@ if [ "$INTERACTIVE" = true ]; then
     if [ "$INSTALL_NVIM" = false ] && [ "$INSTALL_GHOSTTY" = false ] && \
        [ "$INSTALL_BTOP" = false ] && [ "$INSTALL_CAVA" = false ] && \
        [ "$INSTALL_NEOFETCH" = false ] && [ "$INSTALL_STARSHIP" = false ] && \
+       [ "$INSTALL_GTK" = false ] && [ "$INSTALL_TERMINATOR" = false ] && \
        [ "$INSTALL_FONTS" = false ]; then
         print_error "Nothing selected. Exiting."
         exit 0
@@ -328,13 +345,15 @@ fi
 # Show what will be installed
 echo -e "${PURPLE}═══ Installation Summary ═══${NC}"
 echo ""
-[ "$INSTALL_NVIM" = true ]     && echo -e "  ${GREEN}[✓]${NC} Neovim"
-[ "$INSTALL_GHOSTTY" = true ]  && echo -e "  ${GREEN}[✓]${NC} Ghostty"
-[ "$INSTALL_BTOP" = true ]     && echo -e "  ${GREEN}[✓]${NC} btop"
-[ "$INSTALL_CAVA" = true ]     && echo -e "  ${GREEN}[✓]${NC} cava"
-[ "$INSTALL_NEOFETCH" = true ] && echo -e "  ${GREEN}[✓]${NC} neofetch"
-[ "$INSTALL_STARSHIP" = true ] && echo -e "  ${GREEN}[✓]${NC} Starship"
-[ "$INSTALL_FONTS" = true ]    && echo -e "  ${GREEN}[✓]${NC} Nerd Fonts"
+[ "$INSTALL_NVIM" = true ]       && echo -e "  ${GREEN}[✓]${NC} Neovim"
+[ "$INSTALL_GHOSTTY" = true ]   && echo -e "  ${GREEN}[✓]${NC} Ghostty"
+[ "$INSTALL_BTOP" = true ]      && echo -e "  ${GREEN}[✓]${NC} btop"
+[ "$INSTALL_CAVA" = true ]      && echo -e "  ${GREEN}[✓]${NC} cava"
+[ "$INSTALL_NEOFETCH" = true ]  && echo -e "  ${GREEN}[✓]${NC} neofetch"
+[ "$INSTALL_STARSHIP" = true ]  && echo -e "  ${GREEN}[✓]${NC} Starship"
+[ "$INSTALL_GTK" = true ]       && echo -e "  ${GREEN}[✓]${NC} GTK 3"
+[ "$INSTALL_TERMINATOR" = true ] && echo -e "  ${GREEN}[✓]${NC} Terminator"
+[ "$INSTALL_FONTS" = true ]     && echo -e "  ${GREEN}[✓]${NC} Nerd Fonts"
 echo ""
 
 # ============================================
@@ -540,7 +559,7 @@ echo ""
 echo -e "${PURPLE}═══ Step 5: Installing Configurations ═══${NC}"
 echo ""
 
-[ "$INSTALL_NVIM" = true ]     && install_config "nvim"
+[ "$INSTALL_NVIM" = true ]      && install_config "nvim"
 if [ "$INSTALL_GHOSTTY" = true ]; then
     echo -e "${PURPLE}═══ Installing Ghostty AppImage ═══${NC}"
     echo ""
@@ -568,11 +587,31 @@ if [ "$INSTALL_GHOSTTY" = true ]; then
     fi
     echo ""
 fi
-[ "$INSTALL_GHOSTTY" = true ]  && install_config "ghostty"
-[ "$INSTALL_BTOP" = true ]     && install_config "btop"
-[ "$INSTALL_CAVA" = true ]     && install_config "cava"
-[ "$INSTALL_NEOFETCH" = true ] && install_config "neofetch"
-[ "$INSTALL_STARSHIP" = true ] && install_config "starship.toml"
+[ "$INSTALL_GHOSTTY" = true ]   && install_config "ghostty"
+[ "$INSTALL_BTOP" = true ]      && install_config "btop"
+[ "$INSTALL_CAVA" = true ]      && install_config "cava"
+[ "$INSTALL_NEOFETCH" = true ]  && install_config "neofetch"
+[ "$INSTALL_STARSHIP" = true ]  && install_config "starship.toml"
+
+if [ "$INSTALL_GTK" = true ]; then
+    print_info "Installing GTK 3 manga-mono theme..."
+    mkdir -p "$HOME/.themes/manga-mono/gtk-3.0"
+    cp "$SCRIPT_DIR/gtk/gtk-3.0/gtk.css" "$HOME/.themes/manga-mono/gtk-3.0/gtk.css"
+    if command_exists gsettings; then
+        gsettings set org.gnome.desktop.interface gtk-theme manga-mono
+        print_success "GTK theme set to manga-mono"
+    else
+        print_success "GTK theme copied — apply manually via gnome-tweaks or gsettings"
+    fi
+fi
+
+if [ "$INSTALL_TERMINATOR" = true ]; then
+    print_info "Installing Terminator config..."
+    mkdir -p "$CONFIG_DIR/terminator"
+    backup_config "terminator"
+    cp "$SCRIPT_DIR/terminator/config" "$CONFIG_DIR/terminator/config"
+    print_success "Terminator config installed"
+fi
 
 echo ""
 
@@ -819,5 +858,5 @@ fi
 print_info "For customization help, see: $SCRIPT_DIR/README.md"
 echo ""
 
-echo -e "${PURPLE}Enjoy your new Dracula-themed terminal!${NC}"
+echo -e "${PURPLE}Enjoy your Manga Mono terminal!${NC}"
 echo ""
