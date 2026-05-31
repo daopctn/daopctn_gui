@@ -37,6 +37,7 @@ INSTALL_FONTS=false
 INSTALL_GTK=false
 INSTALL_TERMINATOR=false
 INSTALL_CLANGD=false
+INSTALL_VSCODE=false
 INSTALL_ALL=false
 REINSTALL=false
 INTERACTIVE=true
@@ -139,6 +140,11 @@ while [[ $# -gt 0 ]]; do
             INTERACTIVE=false
             shift
             ;;
+        --vscode)
+            INSTALL_VSCODE=true
+            INTERACTIVE=false
+            shift
+            ;;
         -h|--help)
             show_usage
             exit 0
@@ -163,6 +169,7 @@ if [ "$INSTALL_ALL" = true ]; then
     INSTALL_GTK=true
     INSTALL_TERMINATOR=true
     INSTALL_CLANGD=true
+    INSTALL_VSCODE=true
 fi
 
 # ============================================
@@ -345,6 +352,7 @@ if [ "$INTERACTIVE" = true ]; then
     ask_install "gtk"       "GTK 3 theme (manga-mono)"      && INSTALL_GTK=true
     ask_install "terminator" "Terminator config"            && INSTALL_TERMINATOR=true
     ask_install "clangd"    "clangd LSP config (GCC11+Qt5)" && INSTALL_CLANGD=true
+    ask_install "vscode"    "VS Code Manga Mono theme"      && INSTALL_VSCODE=true
     ask_install "fonts"     "CaskaydiaCove Nerd Font"       && INSTALL_FONTS=true
 
     echo ""
@@ -355,6 +363,7 @@ if [ "$INTERACTIVE" = true ]; then
        [ "$INSTALL_NEOFETCH" = false ] && [ "$INSTALL_STARSHIP" = false ] && \
        [ "$INSTALL_GTK" = false ] && [ "$INSTALL_TERMINATOR" = false ] && \
        [ "$INSTALL_CLANGD" = false ] && \
+       [ "$INSTALL_VSCODE" = false ] && \
        [ "$INSTALL_FONTS" = false ]; then
         print_error "Nothing selected. Exiting."
         exit 0
@@ -373,6 +382,7 @@ echo ""
 [ "$INSTALL_GTK" = true ]       && echo -e "  ${GREEN}[✓]${NC} GTK 3"
 [ "$INSTALL_TERMINATOR" = true ] && echo -e "  ${GREEN}[✓]${NC} Terminator"
 [ "$INSTALL_CLANGD" = true ]    && echo -e "  ${GREEN}[✓]${NC} clangd config"
+[ "$INSTALL_VSCODE" = true ]   && echo -e "  ${GREEN}[✓]${NC} VS Code theme"
 [ "$INSTALL_FONTS" = true ]     && echo -e "  ${GREEN}[✓]${NC} Nerd Fonts"
 echo ""
 
@@ -601,6 +611,14 @@ fi
 [ "$INSTALL_NEOFETCH" = true ]  && install_config "neofetch"
 [ "$INSTALL_STARSHIP" = true ]  && install_config "starship.toml"
 [ "$INSTALL_CLANGD" = true ]   && install_config "clangd"
+
+if [ "$INSTALL_VSCODE" = true ]; then
+    VSCODE_EXT_DIR="$HOME/.vscode/extensions/manga-mono"
+    mkdir -p "$VSCODE_EXT_DIR"
+    cp -r "$SCRIPT_DIR/vscode/manga-mono/." "$VSCODE_EXT_DIR/"
+    print_success "VS Code Manga Mono theme installed to ~/.vscode/extensions/manga-mono"
+    print_info "In VS Code: Ctrl+Shift+P → 'Color Theme' → select 'Manga Mono'"
+fi
 
 if [ "$INSTALL_GTK" = true ]; then
     print_info "Installing GTK 3 manga-mono theme..."

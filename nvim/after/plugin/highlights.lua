@@ -1,0 +1,11 @@
+vim.api.nvim_set_hl(0, "Normal",      { bg = "none" })
+vim.api.nvim_set_hl(0, "NormalFloat", { bg = "none" })
+vim.api.nvim_set_hl(0, "NormalNC",    { bg = "none" })
+vim.api.nvim_set_hl(0, "SignColumn",  { bg = "none" })
+vim.api.nvim_set_hl(0, "LineNr",      { bg = "none" })
+vim.api.nvim_set_hl(0, "Visual",                  { bg = "#2d5a8e", fg = "none" })
+vim.api.nvim_set_hl(0, "VisualNOS",               { bg = "#2d5a8e", fg = "none" })
+
+vim.api.nvim_set_hl(0, "@punctuation.bracket",    { fg = "#b9c1cb" })
+vim.api.nvim_set_hl(0, "@punctuation.delimiter",  { fg = "#b9c1cb" })
+vim.api.nvim_set_hl(0, "@punctuation.special",    { fg = "#b9c1cb" })
