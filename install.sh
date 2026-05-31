@@ -37,6 +37,7 @@ INSTALL_FONTS=false
 INSTALL_GTK=false
 INSTALL_TERMINATOR=false
 INSTALL_ALL=false
+REINSTALL=false
 INTERACTIVE=true
 
 # ============================================
@@ -52,7 +53,8 @@ show_usage() {
     echo "Usage: ./install.sh [OPTIONS]"
     echo ""
     echo "Options:"
-    echo "  --all          Install everything"
+    echo "  --reinstall    Clean reinstall — removes existing configs then installs everything
+  --all          Install everything"
     echo "  --nvim         Install Neovim config"
     echo "  --ghostty      Install Ghostty config"
     echo "  --btop         Install btop config"
@@ -75,6 +77,12 @@ show_usage() {
 # ============================================
 while [[ $# -gt 0 ]]; do
     case "$1" in
+        --reinstall)
+            REINSTALL=true
+            INSTALL_ALL=true
+            INTERACTIVE=false
+            shift
+            ;;
         --all)
             INSTALL_ALL=true
             INTERACTIVE=false
@@ -287,6 +295,13 @@ echo "║        Manga Mono Terminal Setup                  ║"
 echo "║                                                       ║"
 echo "╚═══════════════════════════════════════════════════════╝"
 echo -e "${NC}"
+
+# Clean install: remove existing configs first
+if [ "$REINSTALL" = true ]; then
+    print_info "Clean reinstall — removing existing configs..."
+    bash "$SCRIPT_DIR/uninstall.sh" --yes
+    echo ""
+fi
 
 print_info "Installation directory: $SCRIPT_DIR"
 
