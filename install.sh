@@ -12,9 +12,7 @@ GREEN='\033[0;32m'
 YELLOW='\033[1;33m'
 BLUE='\033[0;34m'
 PURPLE='\033[0;35m'
-CYAN='\033[0;36m'
-BOLD='\033[1m'
-NC='\033[0m' # No Color
+NC='\033[0m'
 
 # Get the directory where this script is located
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
@@ -55,14 +53,18 @@ show_usage() {
     echo "Usage: ./install.sh [OPTIONS]"
     echo ""
     echo "Options:"
-    echo "  --reinstall    Clean reinstall — removes existing configs then installs everything
-  --all          Install everything"
+    echo "  --all          Install everything"
+    echo "  --reinstall    Clean reinstall — removes existing configs then installs everything"
     echo "  --nvim         Install Neovim config"
     echo "  --ghostty      Install Ghostty config"
     echo "  --btop         Install btop config"
     echo "  --cava         Install cava config"
     echo "  --neofetch     Install neofetch config"
     echo "  --starship     Install Starship prompt config"
+    echo "  --gtk          Install GTK 3 manga-mono theme"
+    echo "  --terminator   Install Terminator config"
+    echo "  --clangd       Install clangd LSP config (GCC11 + Qt5)"
+    echo "  --vscode       Install VS Code Manga Mono theme"
     echo "  --fonts        Install Nerd Fonts (CaskaydiaCove)"
     echo "  -h, --help     Show this help message"
     echo ""
@@ -307,7 +309,17 @@ echo -e "${NC}"
 
 # Clean install: remove existing configs first
 if [ "$REINSTALL" = true ]; then
-    print_info "Clean reinstall — removing existing configs..."
+    echo ""
+    print_warning "REINSTALL will DELETE all existing configs: nvim, ghostty, btop, cava, neofetch, starship, terminator, clangd."
+    print_warning "Backups are NOT created before removal."
+    echo ""
+    read -p "  Are you sure? This cannot be undone. (yes/n): " -r
+    echo ""
+    if [[ "$REPLY" != "yes" ]]; then
+        print_info "Reinstall cancelled."
+        exit 0
+    fi
+    print_info "Removing existing configs..."
     bash "$SCRIPT_DIR/uninstall.sh" --yes
     echo ""
 fi
@@ -332,32 +344,41 @@ echo ""
 if [ "$INTERACTIVE" = true ]; then
     echo -e "${PURPLE}═══ Select Components to Install ═══${NC}"
     echo ""
-    echo "For each component, press y to install or n to skip:"
+    read -p "  Install everything? (y/n): " -n 1 -r
     echo ""
 
-    ask_install() {
-        local name="$1"
-        local desc="$2"
-        read -p "  Install ${name} (${desc})? (y/n): " -n 1 -r
+    if [[ $REPLY =~ ^[Yy]$ ]]; then
+        INSTALL_NVIM=true; INSTALL_GHOSTTY=true; INSTALL_BTOP=true
+        INSTALL_CAVA=true; INSTALL_NEOFETCH=true; INSTALL_STARSHIP=true
+        INSTALL_GTK=true; INSTALL_TERMINATOR=true; INSTALL_CLANGD=true
+        INSTALL_VSCODE=true; INSTALL_FONTS=true
+    else
+        echo "Select individually (y/n for each):"
         echo ""
-        [[ $REPLY =~ ^[Yy]$ ]]
-    }
 
-    ask_install "nvim"       "Neovim editor config"          && INSTALL_NVIM=true
-    ask_install "ghostty"   "Ghostty terminal config"       && INSTALL_GHOSTTY=true
-    ask_install "btop"      "btop system monitor config"    && INSTALL_BTOP=true
-    ask_install "cava"      "cava audio visualizer config"  && INSTALL_CAVA=true
-    ask_install "neofetch"  "neofetch system info config"   && INSTALL_NEOFETCH=true
-    ask_install "starship"  "Starship prompt config"        && INSTALL_STARSHIP=true
-    ask_install "gtk"       "GTK 3 theme (manga-mono)"      && INSTALL_GTK=true
-    ask_install "terminator" "Terminator config"            && INSTALL_TERMINATOR=true
-    ask_install "clangd"    "clangd LSP config (GCC11+Qt5)" && INSTALL_CLANGD=true
-    ask_install "vscode"    "VS Code Manga Mono theme"      && INSTALL_VSCODE=true
-    ask_install "fonts"     "CaskaydiaCove Nerd Font"       && INSTALL_FONTS=true
+        ask_install() {
+            local name="$1"
+            local desc="$2"
+            read -p "  Install ${name} (${desc})? (y/n): " -n 1 -r
+            echo ""
+            [[ $REPLY =~ ^[Yy]$ ]]
+        }
+
+        if ask_install "nvim"        "Neovim editor config";          then INSTALL_NVIM=true;       fi
+        if ask_install "ghostty"     "Ghostty terminal config";       then INSTALL_GHOSTTY=true;    fi
+        if ask_install "btop"        "btop system monitor config";    then INSTALL_BTOP=true;       fi
+        if ask_install "cava"        "cava audio visualizer config";  then INSTALL_CAVA=true;       fi
+        if ask_install "neofetch"    "neofetch system info config";   then INSTALL_NEOFETCH=true;   fi
+        if ask_install "starship"    "Starship prompt config";        then INSTALL_STARSHIP=true;   fi
+        if ask_install "gtk"         "GTK 3 theme (manga-mono)";      then INSTALL_GTK=true;        fi
+        if ask_install "terminator"  "Terminator config";             then INSTALL_TERMINATOR=true; fi
+        if ask_install "clangd"      "clangd LSP config (GCC11+Qt5)"; then INSTALL_CLANGD=true;     fi
+        if ask_install "vscode"      "VS Code Manga Mono theme";      then INSTALL_VSCODE=true;     fi
+        if ask_install "fonts"       "CaskaydiaCove Nerd Font";       then INSTALL_FONTS=true;      fi
+    fi
 
     echo ""
 
-    # Check if anything was selected
     if [ "$INSTALL_NVIM" = false ] && [ "$INSTALL_GHOSTTY" = false ] && \
        [ "$INSTALL_BTOP" = false ] && [ "$INSTALL_CAVA" = false ] && \
        [ "$INSTALL_NEOFETCH" = false ] && [ "$INSTALL_STARSHIP" = false ] && \
@@ -373,17 +394,25 @@ fi
 # Show what will be installed
 echo -e "${PURPLE}═══ Installation Summary ═══${NC}"
 echo ""
-[ "$INSTALL_NVIM" = true ]       && echo -e "  ${GREEN}[✓]${NC} Neovim"
-[ "$INSTALL_GHOSTTY" = true ]   && echo -e "  ${GREEN}[✓]${NC} Ghostty"
-[ "$INSTALL_BTOP" = true ]      && echo -e "  ${GREEN}[✓]${NC} btop"
-[ "$INSTALL_CAVA" = true ]      && echo -e "  ${GREEN}[✓]${NC} cava"
-[ "$INSTALL_NEOFETCH" = true ]  && echo -e "  ${GREEN}[✓]${NC} neofetch"
-[ "$INSTALL_STARSHIP" = true ]  && echo -e "  ${GREEN}[✓]${NC} Starship"
-[ "$INSTALL_GTK" = true ]       && echo -e "  ${GREEN}[✓]${NC} GTK 3"
-[ "$INSTALL_TERMINATOR" = true ] && echo -e "  ${GREEN}[✓]${NC} Terminator"
-[ "$INSTALL_CLANGD" = true ]    && echo -e "  ${GREEN}[✓]${NC} clangd config"
-[ "$INSTALL_VSCODE" = true ]   && echo -e "  ${GREEN}[✓]${NC} VS Code theme"
-[ "$INSTALL_FONTS" = true ]     && echo -e "  ${GREEN}[✓]${NC} Nerd Fonts"
+[ "$INSTALL_NVIM" = true ]        && echo -e "  ${GREEN}[✓]${NC} Neovim"        || true
+[ "$INSTALL_GHOSTTY" = true ]    && echo -e "  ${GREEN}[✓]${NC} Ghostty"       || true
+[ "$INSTALL_BTOP" = true ]       && echo -e "  ${GREEN}[✓]${NC} btop"          || true
+[ "$INSTALL_CAVA" = true ]       && echo -e "  ${GREEN}[✓]${NC} cava"          || true
+[ "$INSTALL_NEOFETCH" = true ]   && echo -e "  ${GREEN}[✓]${NC} neofetch"      || true
+[ "$INSTALL_STARSHIP" = true ]   && echo -e "  ${GREEN}[✓]${NC} Starship"      || true
+[ "$INSTALL_GTK" = true ]        && echo -e "  ${GREEN}[✓]${NC} GTK 3"         || true
+[ "$INSTALL_TERMINATOR" = true ] && echo -e "  ${GREEN}[✓]${NC} Terminator"    || true
+[ "$INSTALL_CLANGD" = true ]     && echo -e "  ${GREEN}[✓]${NC} clangd config" || true
+[ "$INSTALL_VSCODE" = true ]     && echo -e "  ${GREEN}[✓]${NC} VS Code theme" || true
+[ "$INSTALL_FONTS" = true ]      && echo -e "  ${GREEN}[✓]${NC} Nerd Fonts"    || true
+echo ""
+
+read -p "Proceed with installation? (y/n): " -n 1 -r
+echo ""
+if [[ ! $REPLY =~ ^[Yy]$ ]]; then
+    print_info "Installation cancelled."
+    exit 0
+fi
 echo ""
 
 # ============================================
@@ -577,7 +606,7 @@ echo ""
 echo -e "${PURPLE}═══ Step 4: Installing Configurations ═══${NC}"
 echo ""
 
-[ "$INSTALL_NVIM" = true ]      && install_config "nvim"
+[ "$INSTALL_NVIM" = true ]      && install_config "nvim" || true
 if [ "$INSTALL_GHOSTTY" = true ]; then
     echo -e "${PURPLE}═══ Installing Ghostty AppImage ═══${NC}"
     echo ""
@@ -605,12 +634,12 @@ if [ "$INSTALL_GHOSTTY" = true ]; then
     fi
     echo ""
 fi
-[ "$INSTALL_GHOSTTY" = true ]   && install_config "ghostty"
-[ "$INSTALL_BTOP" = true ]      && install_config "btop"
-[ "$INSTALL_CAVA" = true ]      && install_config "cava"
-[ "$INSTALL_NEOFETCH" = true ]  && install_config "neofetch"
-[ "$INSTALL_STARSHIP" = true ]  && install_config "starship.toml"
-[ "$INSTALL_CLANGD" = true ]   && install_config "clangd"
+[ "$INSTALL_GHOSTTY" = true ]   && install_config "ghostty"     || true
+[ "$INSTALL_BTOP" = true ]      && install_config "btop"         || true
+[ "$INSTALL_CAVA" = true ]      && install_config "cava"         || true
+[ "$INSTALL_NEOFETCH" = true ]  && install_config "neofetch"     || true
+[ "$INSTALL_STARSHIP" = true ]  && install_config "starship.toml" || true
+[ "$INSTALL_CLANGD" = true ]    && install_config "clangd"       || true
 
 if [ "$INSTALL_VSCODE" = true ]; then
     VSCODE_EXT_DIR="$HOME/.vscode/extensions/manga-mono"
@@ -643,7 +672,7 @@ fi
 echo ""
 
 # ============================================
-# Step 5.5: Restore Offline Nvim Data (if no internet)
+# Step 5: Restore Offline Nvim Data (if no internet)
 # ============================================
 if [ "$INSTALL_NVIM" = true ] && has_offline_file "nvim-plugins.tar.gz"; then
     echo -e "${PURPLE}═══ Offline: Restoring Neovim Data ═══${NC}"
@@ -721,7 +750,7 @@ fi
 # Step 5: Install Nerd Fonts (if selected)
 # ============================================
 if [ "$INSTALL_FONTS" = true ]; then
-    echo -e "${PURPLE}═══ Step 5: Nerd Fonts Setup ═══${NC}"
+    echo -e "${PURPLE}═══ Step 6: Nerd Fonts Setup ═══${NC}"
     echo ""
 
     FONT_DIR="$HOME/.local/share/fonts"
@@ -760,7 +789,7 @@ fi
 # Step 6: Setup Shell Integration (if starship selected)
 # ============================================
 if [ "$INSTALL_STARSHIP" = true ]; then
-    echo -e "${PURPLE}═══ Step 6: Shell Integration (Starship) ═══${NC}"
+    echo -e "${PURPLE}═══ Step 7: Shell Integration (Starship) ═══${NC}"
     echo ""
 
     SHELL_NAME=$(basename "$SHELL")
@@ -817,7 +846,7 @@ fi
 # Step 7: Neovim Setup (if nvim selected)
 # ============================================
 if [ "$INSTALL_NVIM" = true ]; then
-    echo -e "${PURPLE}═══ Step 7: Neovim Plugin Installation ═══${NC}"
+    echo -e "${PURPLE}═══ Step 8: Neovim Plugin Installation ═══${NC}"
     echo ""
 
     print_info "Neovim plugins will be installed automatically on first launch."

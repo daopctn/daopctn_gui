@@ -33,6 +33,7 @@ daopctn_gui/
 │   ├── btop.conf
 │   └── themes/manga-mono.theme
 ├── cava/config
+├── clangd/config.yaml          # global clangd: GCC11 + Qt5.14.2
 ├── ghostty/
 │   ├── config
 │   ├── shaders/cursor_smear.glsl
@@ -44,10 +45,14 @@ daopctn_gui/
 ├── nvim/
 │   ├── init.lua
 │   ├── lazy-lock.json
+│   ├── after/plugin/highlights.lua   # post-plugin highlight overrides
 │   └── lua/plugins/
 ├── terminator/
 │   ├── config
 │   └── manga-mono
+├── vscode/manga-mono/              # VS Code theme extension
+│   ├── package.json
+│   └── themes/manga-mono-color-theme.json
 ├── assets/           # wallpapers
 ├── offline/          # offline installers
 ├── install.sh
@@ -83,13 +88,28 @@ daopctn_gui/
 ### Terminator
 - Manga mono colors
 
+### VS Code
+- Theme extension: Manga Mono
+- Install via `--vscode` flag or `./install.sh`
+- Activate: `Ctrl+Shift+P` → Color Theme → **Manga Mono**
+
+### clangd
+- Global config: `~/.config/clangd/config.yaml`
+- GCC 11 stdlib paths + Qt5.14.2 headers (`/opt/Qt5.14.2/5.14.2/gcc_64/include`)
+- Install via `--clangd` flag
+
 ## Installation
 
 ### Automated
 
 ```bash
-./install.sh
+./install.sh            # interactive: select all or pick individually
+./install.sh --all      # install everything non-interactively
+./install.sh --nvim --ghostty --vscode --clangd   # specific components
+./install.sh --reinstall  # wipe existing configs and reinstall all
 ```
+
+**Flags:** `--nvim` `--ghostty` `--btop` `--cava` `--neofetch` `--starship` `--gtk` `--terminator` `--clangd` `--vscode` `--fonts`
 
 ### Manual
 
@@ -130,6 +150,10 @@ On first Neovim launch, lazy.nvim auto-installs all plugins (~2-3 min).
 **Neovim plugins missing** → run `:Lazy sync`
 
 **Starship not showing** → verify `eval "$(starship init bash)"` in shell rc
+
+**VS Code theme missing** → reload window (`Ctrl+Shift+P` → Reload Window), then select theme
+
+**clangd Qt5 headers not found** → verify Qt5 installed at `/opt/Qt5.14.2/5.14.2/gcc_64/include`
 
 ## License
 
