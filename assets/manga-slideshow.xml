@@ -1,0 +1,32 @@
+<background>
+  <starttime>
+    <year>2026</year>
+    <month>1</month>
+    <day>1</day>
+    <hour>0</hour>
+    <minute>0</minute>
+    <second>0</second>
+  </starttime>
+
+  <!-- Mountain wallpaper — 12 hours -->
+  <static>
+    <duration>43200</duration>
+    <file>/home/daopctn/My projects/daopctn_gui/assets/wallpaperflare.jpeg</file>
+  </static>
+  <transition type="overlay">
+    <duration>5</duration>
+    <from>/home/daopctn/My projects/daopctn_gui/assets/wallpaperflare.jpeg</from>
+    <to>/home/daopctn/My projects/daopctn_gui/assets/wallpaper.jpeg</to>
+  </transition>
+
+  <!-- Birds wallpaper — 12 hours -->
+  <static>
+    <duration>43200</duration>
+    <file>/home/daopctn/My projects/daopctn_gui/assets/wallpaper.jpeg</file>
+  </static>
+  <transition type="overlay">
+    <duration>5</duration>
+    <from>/home/daopctn/My projects/daopctn_gui/assets/wallpaper.jpeg</from>
+    <to>/home/daopctn/My projects/daopctn_gui/assets/wallpaperflare.jpeg</to>
+  </transition>
+</background>
