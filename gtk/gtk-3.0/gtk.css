@@ -40,21 +40,6 @@ paned > separator {
   padding: 0;
 }
 
-headerbar, .titlebar {
-  background-color: #1c2128;
-  color: @theme_fg_color;
-  border-bottom: 1px solid @borders;
-  min-height: 18px;
-  padding: 0 6px;
-}
-
-headerbar * { margin-top: 0; margin-bottom: 0; }
-headerbar .title { font-size: 13px; }
-
-headerbar:backdrop, .titlebar:backdrop {
-  background-color: #161b22;
-  color: @theme_unfocused_fg_color;
-}
 
 tooltip {
   background-color: @theme_tooltip_bg_color;
