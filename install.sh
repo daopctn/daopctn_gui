@@ -668,8 +668,8 @@ fi
 
 if [ "$INSTALL_TERMINATOR" = true ]; then
     print_info "Installing Terminator config..."
-    mkdir -p "$CONFIG_DIR/terminator"
     backup_config "terminator"
+    mkdir -p "$CONFIG_DIR/terminator"
     cp "$SCRIPT_DIR/terminator/config" "$CONFIG_DIR/terminator/config"
     print_success "Terminator config installed"
 fi
