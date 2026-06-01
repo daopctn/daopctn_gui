@@ -239,6 +239,9 @@ install_config() {
         return
     fi
 
+    # Remove existing dest to prevent cp nesting src inside dest
+    rm -rf "$dest"
+    mkdir -p "$(dirname "$dest")"
     cp -r "$src" "$dest"
     print_success "Copied $name"
 }
