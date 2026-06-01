@@ -46,7 +46,7 @@ return {
       })
 
       local function set_scope_hl()
-        vim.api.nvim_set_hl(0, "MiniIndentscopeSymbol", { fg = "#ff79c6" })
+        vim.api.nvim_set_hl(0, "MiniIndentscopeSymbol", { fg = "#4a9eff" })
       end
 
       vim.api.nvim_create_autocmd("ColorScheme", { callback = set_scope_hl })
