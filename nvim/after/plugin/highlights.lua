@@ -3,6 +3,7 @@ vim.api.nvim_set_hl(0, "NormalFloat", { bg = "none" })
 vim.api.nvim_set_hl(0, "NormalNC",    { bg = "none" })
 vim.api.nvim_set_hl(0, "SignColumn",  { bg = "none" })
 vim.api.nvim_set_hl(0, "LineNr",      { bg = "none" })
+vim.api.nvim_set_hl(0, "Cursor",                  { bg = "#4a9eff", fg = "#0d1117" })
 vim.api.nvim_set_hl(0, "Visual",                  { bg = "#2d5a8e", fg = "none" })
 vim.api.nvim_set_hl(0, "VisualNOS",               { bg = "#2d5a8e", fg = "none" })
 
