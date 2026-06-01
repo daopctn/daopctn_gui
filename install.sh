@@ -407,13 +407,15 @@ echo ""
 [ "$INSTALL_FONTS" = true ]      && echo -e "  ${GREEN}[✓]${NC} Nerd Fonts"    || true
 echo ""
 
-read -p "Proceed with installation? (y/n): " -n 1 -r
-echo ""
-if [[ ! $REPLY =~ ^[Yy]$ ]]; then
-    print_info "Installation cancelled."
-    exit 0
+if [ "$INTERACTIVE" = true ]; then
+    read -p "Proceed with installation? (y/n): " -n 1 -r
+    echo ""
+    if [[ ! $REPLY =~ ^[Yy]$ ]]; then
+        print_info "Installation cancelled."
+        exit 0
+    fi
+    echo ""
 fi
-echo ""
 
 # ============================================
 # Step 1: Check Dependencies (only for selected components)
