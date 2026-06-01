@@ -40,8 +40,8 @@ return {
       scope.setup({
         symbol = "│",
         draw = {
-          delay = 50,
-          animation = scope.gen_animation.cubic({ easing = "in-out", duration = 100, unit = "total" }),
+          delay = 0,
+          animation = scope.gen_animation.none(),
         },
       })
 
