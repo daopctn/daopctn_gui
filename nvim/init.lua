@@ -34,9 +34,11 @@ vim.opt.rtp:prepend(lazypath)
 vim.g.mapleader = " "
 vim.g.maplocalleader = "\\"
 
-local opts = {}
-
-require("lazy").setup("plugins", opts)
+require("lazy").setup("plugins", {
+  checker = { enabled = false },
+  change_detection = { enabled = false, notify = false },
+  install = { missing = true },
+})
 
 -- Ensure line number settings are applied after colorscheme loads
 vim.api.nvim_create_autocmd("ColorScheme", {
