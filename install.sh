@@ -4,7 +4,7 @@
 # Automated setup for Manga Mono terminal environment
 # Designed for Ubuntu and similar Debian-based Linux distributions
 
-set -e  # Exit on error
+# Note: no set -e — install script continues on non-critical errors
 
 # Colors for output
 RED='\033[0;31m'
