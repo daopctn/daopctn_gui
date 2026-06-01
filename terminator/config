@@ -22,6 +22,7 @@
     foreground_color = "#e8eaed"
     palette = "#0d1117:#bf6a5e:#6e8b9e:#9aa3ad:#4a9eff:#7c8aa0:#6fb3d6:#b9c1cb:#484f58:#d0746e:#8fa6b5:#c0c8d0:#74b4ff:#9aa8bd:#9cd0ec:#e8eaed"
     use_system_font = False
+    scrollback_infinite = True
   [[manga-mono]]
     background_color = "#0d1117"
     background_darkness = 1.0
@@ -32,6 +33,10 @@
     foreground_color = "#e8eaed"
     palette = "#0d1117:#bf6a5e:#6e8b9e:#9aa3ad:#4a9eff:#7c8aa0:#6fb3d6:#b9c1cb:#484f58:#d0746e:#8fa6b5:#c0c8d0:#74b4ff:#9aa8bd:#9cd0ec:#e8eaed"
     use_system_font = False
+    scrollback_infinite = True
+    background_darkness = 0.92
+    background_type = image
+    background_image = /home/daopctn/My projects/daopctn_gui/assets/wallpaperflare.jpeg
 [layouts]
   [[default]]
     [[[window0]]]
