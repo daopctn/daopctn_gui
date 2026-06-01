@@ -669,7 +669,8 @@ if [ "$INSTALL_TERMINATOR" = true ]; then
     print_info "Installing Terminator config..."
     backup_config "terminator"
     mkdir -p "$CONFIG_DIR/terminator"
-    cp "$SCRIPT_DIR/terminator/config" "$CONFIG_DIR/terminator/config"
+    sed "s|background_image = .*|background_image = $SCRIPT_DIR/assets/wallpaperflare.jpeg|g" \
+        "$SCRIPT_DIR/terminator/config" > "$CONFIG_DIR/terminator/config"
     print_success "Terminator config installed"
 fi
 
