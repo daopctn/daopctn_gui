@@ -168,7 +168,6 @@ if [ "$INSTALL_ALL" = true ]; then
     INSTALL_NEOFETCH=true
     INSTALL_STARSHIP=true
     INSTALL_FONTS=true
-    INSTALL_GTK=true
     INSTALL_TERMINATOR=true
     INSTALL_CLANGD=true
     INSTALL_VSCODE=true
